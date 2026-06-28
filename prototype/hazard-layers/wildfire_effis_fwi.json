@@ -1,0 +1,36 @@
+{
+  "bbox": {
+    "east": 0.4,
+    "north": 52.0,
+    "south": 50.9,
+    "west": -1.6
+  },
+  "commercial_suitability": "Demo suitable with attribution; cache policy must be checked before external production use.",
+  "crs": "EPSG:4326 image overlay",
+  "display_name": "Wildfire danger: EFFIS FWI",
+  "files": {
+    "png": "public/hazard-layers/wildfire_effis_fwi.png",
+    "preview": "public/hazard-previews/wildfire_effis_fwi_raw_vs_enhanced.png",
+    "raw_png": "public/hazard-layers/wildfire_effis_fwi_raw.png"
+  },
+  "hazard_type": "wildfire",
+  "id": "wildfire_effis_fwi",
+  "legend_bins": {
+    "provider_style": "EFFIS FWI classes; keep provider legend semantics"
+  },
+  "license_note": "European Commission reuse notice; attribution required. Verify caching policy for production.",
+  "max": null,
+  "min": null,
+  "nodata": "transparent alpha",
+  "nontransparent_pixels": 2662000,
+  "processing_script": "scripts/process_hazard_layers.py",
+  "rendering_settings": {
+    "enhanced": "continuous cartographic rendering from dated WMS PNG; 42 px Gaussian smoothing, softened colour/contrast, subtle edge contour",
+    "opacity": 0.52,
+    "raw": "dated WMS PNG"
+  },
+  "resolution": "WMS-rendered operational model grid, requested at 2200 px over demo bbox",
+  "source": "EFFIS Fire Weather Index WMS layer mf010.fwi",
+  "source_attribution": "EFFIS / Copernicus Emergency Management Service / European Commission",
+  "source_url": "https://maps.effis.emergency.copernicus.eu/effis?service=WMS&request=GetMap&layers=mf010.fwi&styles=&format=image%2Fpng&transparent=true&version=1.1.1&width=2200&height=1210&srs=EPSG%3A4326&bbox=-1.6%2C50.9%2C0.4%2C52.0&time=2026-06-27"
+}

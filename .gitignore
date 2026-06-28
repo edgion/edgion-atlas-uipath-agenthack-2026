@@ -1,0 +1,17 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+node_modules/
+.playwright-cli/
+__pycache__/
+*.pyc
+*.pyo
+*.log
+*.tmp
+*.bak
+coverage/
+dist/
+build/
+output/
+*.local

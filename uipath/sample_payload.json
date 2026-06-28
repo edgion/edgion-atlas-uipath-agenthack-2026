@@ -1,0 +1,917 @@
+{
+  "workflowName": "Edgion_DataCentre_PhysicalRisk_Workup",
+  "stages": [
+    {
+      "id": "case_intake",
+      "owner": "UiPath queue-compatible case payload",
+      "input": "Portfolio asset or renewal-review trigger.",
+      "output": "Queue item for TVDC01-2026-REVIEW."
+    },
+    {
+      "id": "confirm_evidence_readiness",
+      "owner": "Edgion information check",
+      "input": "Case id, asset context, selected source ids, and active hazard scenario.",
+      "output": "5 selected sources with scale, horizon, intended use, and caveats."
+    },
+    {
+      "id": "run_specialist_workup",
+      "owner": "Edgion review prep",
+      "input": "Evidence package plus asset context.",
+      "output": "Review artifacts: source suitability, spatial / temporal context, resilience gaps, and reviewer questions."
+    },
+    {
+      "id": "create_review_task",
+      "owner": "UiPath human task model",
+      "input": "Prepared review artifacts and safe boundary statement.",
+      "output": "Review task with evidence requests, review questions, allowed actions, and output fields."
+    },
+    {
+      "id": "evidence_incomplete_retry_or_escalate",
+      "owner": "UiPath workflow controls",
+      "input": "Open evidence request status, SLA clock, retry count, and reviewer action.",
+      "output": "Retry, wait, escalate to portfolio risk lead, or proceed to a caveated decision packet."
+    },
+    {
+      "id": "capture_reviewer_action",
+      "owner": "Reviewer",
+      "input": "Modeled human review task and prepared review artifacts.",
+      "output": "Selected action, reviewer note, and evidence owner."
+    },
+    {
+      "id": "generate_decision_record",
+      "owner": "UiPath / Edgion record agent",
+      "input": "Reviewer action plus review package context.",
+      "output": "Audit-ready decision record and evidence trail for the portfolio file."
+    }
+  ],
+  "queueItem": {
+    "queueName": "DataCentrePhysicalRiskReview",
+    "reference": "TVDC01-2026-REVIEW",
+    "priority": "Normal",
+    "specificContent": {
+      "queueReferenceId": "TVDC01-2026-REVIEW",
+      "workflowState": "case_intake_created",
+      "integrationMode": "queue_compatible_payload",
+      "liveQueueSubmitted": false,
+      "slaHours": 48,
+      "retryLimit": 2,
+      "manualOverrideAllowed": true,
+      "caseId": "TVDC01-2026-REVIEW",
+      "assetName": "Thames Valley DC-01",
+      "assetType": "Data centre",
+      "region": "Thames Valley, UK",
+      "reviewType": "Portfolio physical-risk review",
+      "reviewMoment": "Ahead of insurance renewal and internal asset risk update",
+      "activeScenario": "multi-hazard",
+      "selectedSourceIds": [
+        "external_physical_risk_signal",
+        "screening_level_spatial_hazard_context",
+        "internal_portfolio_assumption",
+        "site_resilience_notes",
+        "operational_continuity_context"
+      ],
+      "sourceCount": 5,
+      "humanReviewRequired": true
+    }
+  },
+  "professionalWorkup": {
+    "caseId": "TVDC01-2026-REVIEW",
+    "activeScenario": "multi-hazard",
+    "primaryQuestion": "What physical-risk evidence and caveats should the reviewer consider before deciding whether the current portfolio assumption can remain unchanged?",
+    "selectedSourceIds": [
+      "external_physical_risk_signal",
+      "screening_level_spatial_hazard_context",
+      "internal_portfolio_assumption",
+      "site_resilience_notes",
+      "operational_continuity_context"
+    ],
+    "selectedSourceCount": 5,
+    "summary": "Review package across 5 selected sources: source suitability, spatial and temporal context, resilience gaps, caveats, and reviewer questions.",
+    "requiredSections": [
+      "Source suitability matrix",
+      "Spatial context note",
+      "Temporal context note",
+      "Multi hazard interpretation",
+      "Data centre asset relevance",
+      "Resilience gap table",
+      "What cannot be concluded"
+    ],
+    "sourceSuitability": [
+      {
+        "id": "external_physical_risk_signal",
+        "name": "External Data Centre Physical Risk Signal",
+        "sourceType": "External market / asset-class physical-risk signal",
+        "hazards": [
+          "flooding",
+          "surface_water",
+          "wind_storm",
+          "wildfire_smoke",
+          "extreme_heat",
+          "drought_water_stress",
+          "power_continuity",
+          "cooling_continuity",
+          "business_interruption"
+        ],
+        "nativeScale": "market_or_regional",
+        "timeHorizon": "mixed_current_and_future_stress",
+        "usefulFor": [
+          "review_trigger",
+          "asset_class_context",
+          "hazard_awareness"
+        ],
+        "cannotSupport": [
+          "site_clearance",
+          "pricing_decision",
+          "underwriting_decision",
+          "engineering_conclusion"
+        ],
+        "caveat": "Useful as context and trigger, not as final site-level evidence."
+      },
+      {
+        "id": "screening_level_spatial_hazard_context",
+        "name": "Screening-level Spatial Hazard Context",
+        "sourceType": "Public or local screening-level hazard-context layer",
+        "hazards": [
+          "flooding",
+          "surface_water",
+          "drainage",
+          "wind_storm",
+          "heat",
+          "infrastructure_sensitivity"
+        ],
+        "nativeScale": "screening_level_native_scale",
+        "timeHorizon": "current_or_historical_screening",
+        "usefulFor": [
+          "screening_level_spatial_context",
+          "reviewer_questions",
+          "local_context"
+        ],
+        "cannotSupport": [
+          "building_level_resilience",
+          "flood_defence_status",
+          "operational_readiness",
+          "engineering_design"
+        ],
+        "caveat": "Needs asset-location confidence, source-scale caveats, and site-level evidence before conclusions."
+      },
+      {
+        "id": "internal_portfolio_assumption",
+        "name": "Standard Physical-risk Documentation Assumption",
+        "sourceType": "Internal portfolio review assumption",
+        "hazards": [
+          "general_physical_risk"
+        ],
+        "nativeScale": "portfolio_asset_record",
+        "timeHorizon": "current_review_cycle",
+        "usefulFor": [
+          "business_context",
+          "assumption_to_review"
+        ],
+        "cannotSupport": [
+          "independent_resilience_evidence"
+        ],
+        "caveat": "A record status, not independent evidence."
+      },
+      {
+        "id": "site_resilience_notes",
+        "name": "Partial Site Resilience Note",
+        "sourceType": "Asset / site resilience record",
+        "hazards": [
+          "flooding",
+          "surface_water",
+          "heat",
+          "power_continuity",
+          "cooling_continuity",
+          "water_dependency",
+          "wind_storm",
+          "liquid_release",
+          "business_interruption"
+        ],
+        "nativeScale": "site_level_incomplete",
+        "timeHorizon": "prior_review_cycle",
+        "usefulFor": [
+          "existing_evidence",
+          "gap_identification"
+        ],
+        "cannotSupport": [
+          "full_engineering_assessment"
+        ],
+        "caveat": "Missing evidence in the record does not prove absence of controls."
+      },
+      {
+        "id": "operational_continuity_context",
+        "name": "Data Centre Continuity Dependency Note",
+        "sourceType": "Operational dependency context",
+        "hazards": [
+          "power_continuity",
+          "cooling_continuity",
+          "water_dependency",
+          "service_disruption",
+          "business_interruption",
+          "contingent_business_interruption",
+          "sla_exposure"
+        ],
+        "nativeScale": "asset_class_operational_context",
+        "timeHorizon": "current_operating_context",
+        "usefulFor": [
+          "asset_relevance",
+          "reviewer_questions"
+        ],
+        "cannotSupport": [
+          "verification_of_actual_controls"
+        ],
+        "caveat": "Explains relevance, not site performance."
+      }
+    ],
+    "spatialTemporalContext": {
+      "assetGeometry": {
+        "asset": "Thames Valley DC-01",
+        "region": "Thames Valley, UK",
+        "type": "synthetic point",
+        "workingGeometry": "point plus review buffer",
+        "locationConfidence": "demo coordinate; not a real site assessment"
+      },
+      "operations": [
+        "Represent the asset as a review geometry and record location confidence.",
+        "Classify every source by native spatial scale and intended use.",
+        "Choose the appropriate spatial operation: point-in-polygon, buffer overlay, nearest grid cell, or scale caveat review.",
+        "Turn spatial findings into reviewer questions and caveats instead of a site-level risk conclusion."
+      ],
+      "sourceDiagnostics": [
+        {
+          "id": "external_physical_risk_signal",
+          "name": "External Data Centre Physical Risk Signal",
+          "nativeScale": "market_or_regional",
+          "horizon": "mixed_current_and_future_stress",
+          "spatialMethod": "scale caveat review",
+          "reviewUse": "portfolio trigger and asset-class context",
+          "confidence": "low for site-level use",
+          "caveat": "Market or regional signal cannot clear or fail a single site."
+        },
+        {
+          "id": "screening_level_spatial_hazard_context",
+          "name": "Screening-level Spatial Hazard Context",
+          "nativeScale": "screening_level_native_scale",
+          "horizon": "current_or_historical_screening",
+          "spatialMethod": "point / buffer overlay",
+          "reviewUse": "screening-level local context and reviewer questions",
+          "confidence": "medium for triage, low for site clearance",
+          "caveat": "Native scale and asset-location confidence must be recorded before any human conclusion."
+        },
+        {
+          "id": "internal_portfolio_assumption",
+          "name": "Standard Physical-risk Documentation Assumption",
+          "nativeScale": "portfolio_asset_record",
+          "horizon": "current_review_cycle",
+          "spatialMethod": "assumption context review",
+          "reviewUse": "business context and assumption to test",
+          "confidence": "context only",
+          "caveat": "Internal record is not independent spatial evidence."
+        },
+        {
+          "id": "site_resilience_notes",
+          "name": "Partial Site Resilience Note",
+          "nativeScale": "site_level_incomplete",
+          "horizon": "prior_review_cycle",
+          "spatialMethod": "site evidence gap extraction",
+          "reviewUse": "asset-specific resilience questions",
+          "confidence": "medium for gap identification",
+          "caveat": "Missing records do not prove missing controls."
+        },
+        {
+          "id": "operational_continuity_context",
+          "name": "Data Centre Continuity Dependency Note",
+          "nativeScale": "asset_class_operational_context",
+          "horizon": "current_operating_context",
+          "spatialMethod": "dependency context mapping",
+          "reviewUse": "power, cooling, water, access, and BI relevance",
+          "confidence": "medium for review scoping",
+          "caveat": "Operational context is not verified site performance."
+        }
+      ],
+      "professionalBoundary": "This is a geospatial review note, not a GIS-certified site assessment or engineering conclusion."
+    },
+    "hazardEvidenceInterpretation": [
+      {
+        "hazard": "Flood / surface water",
+        "whyItMatters": "Data-centre downtime can be driven by flooded plant, access routes, switchgear, drainage failure, or low-lying critical equipment.",
+        "evidenceRequest": "Ask for site drainage design, floor levels, freeboard, critical equipment elevation, barriers, access-road floodability, and maintenance records.",
+        "boundary": "This supports review scoping; it does not certify flood protection or clear the site."
+      },
+      {
+        "hazard": "Extreme heat",
+        "whyItMatters": "Heat stress can affect cooling capacity, server inlet temperature, equipment derating, and emergency procedures.",
+        "evidenceRequest": "Ask for cooling redundancy, ASHRAE / OEM operating limits, server inlet temperature thresholds, cooling ride-through, and loss-of-cooling procedures.",
+        "boundary": "This supports review questions; it does not validate thermal design or engineering resilience."
+      },
+      {
+        "hazard": "Power continuity",
+        "whyItMatters": "Grid interruption, switchgear exposure, generator performance, fuel logistics, and ATS / UPS configuration can drive outage risk.",
+        "evidenceRequest": "Ask for utility feeds, UPS configuration, ATS and switchgear records, generator capacity, fuel duration, test logs, and single-point-of-failure review.",
+        "boundary": "This supports review evidence preparation; it does not prove uptime, redundancy class, or loss estimate."
+      },
+      {
+        "hazard": "Cooling / water dependency",
+        "whyItMatters": "Cooling systems may depend on water availability, chiller performance, cooling-tower operation, and local operating restrictions.",
+        "evidenceRequest": "Ask for WUE, water source, backup water plan, cooling-tower demand, drought restriction exposure, and cooling contingency procedure.",
+        "boundary": "This supports dependency review preparation; it does not validate operational readiness."
+      },
+      {
+        "hazard": "Wind / storm",
+        "whyItMatters": "Storms can affect roof and envelope integrity, yard equipment, utility feeds, access, fuel replenishment, and supplier continuity.",
+        "evidenceRequest": "Ask for roof and envelope inspection, yard-equipment anchorage, storm-response plan, backup fuel logistics, and open risk-engineering recommendations.",
+        "boundary": "This supports review preparation; it does not create an engineering conclusion."
+      },
+      {
+        "hazard": "Business interruption context",
+        "whyItMatters": "The same physical trigger may matter differently depending on SLA exposure, redundancy, customers, cloud region role, and recovery assumptions.",
+        "evidenceRequest": "Ask for SLA exposure, RTO / RPO, customer criticality, dependency mapping, contingency plan, and internal BI assumptions.",
+        "boundary": "This supports reviewer context; it does not estimate BI, MFL, PML, or pricing."
+      }
+    ],
+    "resilienceEvidenceGaps": [
+      {
+        "id": "site_asset_basis",
+        "label": "Site and asset basis",
+        "neededEvidence": "Location basis, campus boundary or asset point, IT load, rack density, and critical dependencies."
+      },
+      {
+        "id": "flood_surface_water_controls",
+        "label": "Flood and surface-water controls",
+        "neededEvidence": "Floor levels, drainage design, critical equipment elevation, flood barriers, access-road exposure, and maintenance records."
+      },
+      {
+        "id": "power_continuity",
+        "label": "Power continuity",
+        "neededEvidence": "Utility feeds, UPS, ATS, switchgear, standby generators, fuel duration, and test logs."
+      },
+      {
+        "id": "cooling_continuity",
+        "label": "Cooling continuity",
+        "neededEvidence": "Chiller / CRAH / CRAC redundancy, heat-stress limits, cooling ride-through, and loss-of-cooling procedures."
+      },
+      {
+        "id": "water_dependency",
+        "label": "Water dependency",
+        "neededEvidence": "Water source, WUE, cooling-tower demand, drought restrictions, and backup water plan."
+      },
+      {
+        "id": "risk_engineering_record",
+        "label": "Risk-engineering record",
+        "neededEvidence": "Inspection date, open recommendations, evidence owner, and next review date."
+      }
+    ],
+    "reviewQuestions": [
+      "Which site-level evidence is needed before the current portfolio assumption can be kept unchanged?",
+      "Which external signals are only suitable as review triggers rather than asset-level evidence?",
+      "Which hazards need follow-up: flood / surface water, heat, wind, water dependency, power, cooling, or BI?",
+      "Which caveats must be recorded before this case is closed?",
+      "Who should own the next evidence request: asset owner, broker, risk engineering, or portfolio team?"
+    ],
+    "professionalBoundary": "No validated site-level risk, underwriting, pricing, valuation, insurability, Tier / standards compliance, BI, MFL / PML, or engineering conclusion has been made."
+  },
+  "executionPlan": {
+    "status": "Reviewer action required",
+    "primaryNextStep": "Request current site-level resilience evidence and refer to risk engineering if evidence remains incomplete.",
+    "createdEvidenceRequestCount": 1,
+    "createdEvidenceRequestIds": [
+      "site_asset_basis"
+    ],
+    "evidenceRequestPolicy": {
+      "identifiedEvidenceTaskCount": 6,
+      "primaryRequestId": "site_asset_basis",
+      "currentWorkflowAction": "Create the primary site_asset_basis request before modeled human review; remaining evidence tasks stay available for follow-up routing."
+    },
+    "blockers": [
+      {
+        "title": "Site evidence is incomplete",
+        "reason": "The file does not yet contain current site-level resilience evidence."
+      },
+      {
+        "title": "External signal cannot clear the asset",
+        "reason": "External or screening-level signals can trigger review, but cannot support site clearance."
+      },
+      {
+        "title": "Decision boundary must stay human-owned",
+        "reason": "The file prepares evidence and caveats; it does not make underwriting, pricing, engineering, or insurability decisions."
+      }
+    ],
+    "evidenceTasks": [
+      {
+        "id": "site_asset_basis",
+        "label": "Site and asset basis",
+        "owner": "Asset owner / broker",
+        "request": "Location basis, campus boundary or asset point, IT load, rack density, and critical dependencies.",
+        "status": "Request created",
+        "slaHours": 48,
+        "retry": {
+          "maxAttempts": 2,
+          "retryAfterHours": 24
+        },
+        "escalationOwner": "Portfolio risk lead",
+        "exceptionState": "waiting_for_evidence"
+      },
+      {
+        "id": "flood_surface_water_controls",
+        "label": "Flood and surface-water controls",
+        "owner": "Asset owner / broker",
+        "request": "Floor levels, drainage design, critical equipment elevation, flood barriers, access-road exposure, and maintenance records.",
+        "status": "Needs request",
+        "slaHours": 48,
+        "retry": {
+          "maxAttempts": 2,
+          "retryAfterHours": 24
+        },
+        "escalationOwner": "Portfolio risk lead",
+        "exceptionState": "evidence_request_required"
+      },
+      {
+        "id": "power_continuity",
+        "label": "Power continuity",
+        "owner": "Asset owner / broker",
+        "request": "Utility feeds, UPS, ATS, switchgear, standby generators, fuel duration, and test logs.",
+        "status": "Needs request",
+        "slaHours": 48,
+        "retry": {
+          "maxAttempts": 2,
+          "retryAfterHours": 24
+        },
+        "escalationOwner": "Portfolio risk lead",
+        "exceptionState": "evidence_request_required"
+      },
+      {
+        "id": "cooling_continuity",
+        "label": "Cooling continuity",
+        "owner": "Asset owner / broker",
+        "request": "Chiller / CRAH / CRAC redundancy, heat-stress limits, cooling ride-through, and loss-of-cooling procedures.",
+        "status": "Needs request",
+        "slaHours": 48,
+        "retry": {
+          "maxAttempts": 2,
+          "retryAfterHours": 24
+        },
+        "escalationOwner": "Portfolio risk lead",
+        "exceptionState": "evidence_request_required"
+      },
+      {
+        "id": "water_dependency",
+        "label": "Water dependency",
+        "owner": "Asset owner / broker",
+        "request": "Water source, WUE, cooling-tower demand, drought restrictions, and backup water plan.",
+        "status": "Needs request",
+        "slaHours": 48,
+        "retry": {
+          "maxAttempts": 2,
+          "retryAfterHours": 24
+        },
+        "escalationOwner": "Portfolio risk lead",
+        "exceptionState": "evidence_request_required"
+      },
+      {
+        "id": "risk_engineering_record",
+        "label": "Risk-engineering record",
+        "owner": "Risk engineering",
+        "request": "Inspection date, open recommendations, evidence owner, and next review date.",
+        "status": "Needs request",
+        "slaHours": 48,
+        "retry": {
+          "maxAttempts": 2,
+          "retryAfterHours": 24
+        },
+        "escalationOwner": "Risk engineering",
+        "exceptionState": "evidence_request_required"
+      }
+    ],
+    "handoffActions": [
+      {
+        "id": "request_site_evidence",
+        "label": "Request site-level evidence",
+        "description": "Request current site-level resilience evidence and refer to risk engineering if evidence remains incomplete."
+      },
+      {
+        "id": "refer_risk_engineering",
+        "label": "Refer to risk engineering",
+        "description": "Refer to risk engineering for decision-grade engineering assessment if evidence remains incomplete."
+      },
+      {
+        "id": "keep_under_review",
+        "label": "Keep under review with caveat",
+        "description": "Keep the asset under review when closure depends on additional evidence or committee review."
+      }
+    ],
+    "enterpriseControls": {
+      "queueName": "DataCentrePhysicalRiskReview",
+      "slaHours": 48,
+      "retryPolicy": {
+        "maxAttempts": 2,
+        "retryAfterHours": 24,
+        "retryReason": "Evidence owner has not returned the required site-level evidence."
+      },
+      "escalationPath": [
+        {
+          "stage": "evidence_missing_after_sla",
+          "owner": "Portfolio risk lead",
+          "action": "Escalate missing evidence and keep the case open."
+        },
+        {
+          "stage": "manual_override_requested",
+          "owner": "Risk engineering",
+          "action": "Review whether a caveated decision record is acceptable."
+        }
+      ],
+      "manualOverrideAllowed": true,
+      "auditEvents": [
+        "queue_item_created",
+        "source_pack_loaded",
+        "specialist_workup_completed",
+        "evidence_request_created",
+        "human_review_task_modeled",
+        "reviewer_action_captured",
+        "decision_packet_generated"
+      ]
+    },
+    "exceptionPath": [
+      {
+        "id": "evidence_incomplete",
+        "condition": "Site-level resilience evidence remains missing.",
+        "nextStage": "create_evidence_request"
+      },
+      {
+        "id": "retry_wait",
+        "condition": "Evidence request remains open after SLA.",
+        "nextStage": "retry_or_wait_for_evidence"
+      },
+      {
+        "id": "escalate",
+        "condition": "Evidence still missing after retry.",
+        "nextStage": "escalate_missing_evidence"
+      },
+      {
+        "id": "manual_override",
+        "condition": "Reviewer keeps the case open with a caveat.",
+        "nextStage": "generate_caveated_decision_packet"
+      }
+    ],
+    "supportingDetails": [
+      {
+        "id": "source-caveats",
+        "title": "Source caveats",
+        "items": [
+          "External Data Centre Physical Risk Signal: Useful as context and trigger, not as final site-level evidence.",
+          "Screening-level Spatial Hazard Context: Needs asset-location confidence, source-scale caveats, and site-level evidence before conclusions.",
+          "Standard Physical-risk Documentation Assumption: A record status, not independent evidence.",
+          "Partial Site Resilience Note: Missing evidence in the record does not prove absence of controls.",
+          "Data Centre Continuity Dependency Note: Explains relevance, not site performance."
+        ]
+      },
+      {
+        "id": "hazard-translation",
+        "title": "Hazard translation",
+        "items": [
+          "Flood / surface water: Ask for site drainage design, floor levels, freeboard, critical equipment elevation, barriers, access-road floodability, and maintenance records.",
+          "Extreme heat: Ask for cooling redundancy, ASHRAE / OEM operating limits, server inlet temperature thresholds, cooling ride-through, and loss-of-cooling procedures.",
+          "Power continuity: Ask for utility feeds, UPS configuration, ATS and switchgear records, generator capacity, fuel duration, test logs, and single-point-of-failure review.",
+          "Cooling / water dependency: Ask for WUE, water source, backup water plan, cooling-tower demand, drought restriction exposure, and cooling contingency procedure.",
+          "Wind / storm: Ask for roof and envelope inspection, yard-equipment anchorage, storm-response plan, backup fuel logistics, and open risk-engineering recommendations.",
+          "Business interruption context: Ask for SLA exposure, RTO / RPO, customer criticality, dependency mapping, contingency plan, and internal BI assumptions."
+        ]
+      },
+      {
+        "id": "spatial-method",
+        "title": "Spatial method",
+        "items": [
+          "External Data Centre Physical Risk Signal: scale caveat review; Market or regional signal cannot clear or fail a single site.",
+          "Screening-level Spatial Hazard Context: point / buffer overlay; Native scale and asset-location confidence must be recorded before any human conclusion.",
+          "Standard Physical-risk Documentation Assumption: assumption context review; Internal record is not independent spatial evidence.",
+          "Partial Site Resilience Note: site evidence gap extraction; Missing records do not prove missing controls.",
+          "Data Centre Continuity Dependency Note: dependency context mapping; Operational context is not verified site performance."
+        ]
+      }
+    ]
+  },
+  "humanTask": {
+    "taskTitle": "Review physical-risk work-up: Thames Valley DC-01",
+    "integrationMode": "human_task_model",
+    "productBoundary": "Modeled human review task; not a live Action Center task in this MVP package.",
+    "assignedRole": "Portfolio risk reviewer",
+    "dueStage": "Before renewal file closure",
+    "suggestedEvidenceOwner": "Asset owner / broker / risk engineering",
+    "inputRecord": {
+      "caseId": "TVDC01-2026-REVIEW",
+      "assetName": "Thames Valley DC-01",
+      "reviewType": "Portfolio physical-risk review",
+      "activeScenario": "multi-hazard",
+      "selectedSourceIds": [
+        "external_physical_risk_signal",
+        "screening_level_spatial_hazard_context",
+        "internal_portfolio_assumption",
+        "site_resilience_notes",
+        "operational_continuity_context"
+      ],
+      "workupSummary": "Review package across 5 selected sources: source suitability, spatial and temporal context, resilience gaps, caveats, and reviewer questions.",
+      "createdEvidenceRequestCount": 1,
+      "createdEvidenceRequestIds": [
+        "site_asset_basis"
+      ],
+      "missingEvidence": [
+        {
+          "id": "site_asset_basis",
+          "label": "Site and asset basis",
+          "neededEvidence": "Location basis, campus boundary or asset point, IT load, rack density, and critical dependencies."
+        },
+        {
+          "id": "flood_surface_water_controls",
+          "label": "Flood and surface-water controls",
+          "neededEvidence": "Floor levels, drainage design, critical equipment elevation, flood barriers, access-road exposure, and maintenance records."
+        },
+        {
+          "id": "power_continuity",
+          "label": "Power continuity",
+          "neededEvidence": "Utility feeds, UPS, ATS, switchgear, standby generators, fuel duration, and test logs."
+        },
+        {
+          "id": "cooling_continuity",
+          "label": "Cooling continuity",
+          "neededEvidence": "Chiller / CRAH / CRAC redundancy, heat-stress limits, cooling ride-through, and loss-of-cooling procedures."
+        },
+        {
+          "id": "water_dependency",
+          "label": "Water dependency",
+          "neededEvidence": "Water source, WUE, cooling-tower demand, drought restrictions, and backup water plan."
+        },
+        {
+          "id": "risk_engineering_record",
+          "label": "Risk-engineering record",
+          "neededEvidence": "Inspection date, open recommendations, evidence owner, and next review date."
+        }
+      ],
+      "reviewQuestions": [
+        "Which site-level evidence is needed before the current portfolio assumption can be kept unchanged?",
+        "Which external signals are only suitable as review triggers rather than asset-level evidence?",
+        "Which hazards need follow-up: flood / surface water, heat, wind, water dependency, power, cooling, or BI?",
+        "Which caveats must be recorded before this case is closed?",
+        "Who should own the next evidence request: asset owner, broker, risk engineering, or portfolio team?"
+      ],
+      "sourceCaveats": [
+        {
+          "id": "external_physical_risk_signal",
+          "caveat": "Useful as context and trigger, not as final site-level evidence."
+        },
+        {
+          "id": "screening_level_spatial_hazard_context",
+          "caveat": "Needs asset-location confidence, source-scale caveats, and site-level evidence before conclusions."
+        },
+        {
+          "id": "internal_portfolio_assumption",
+          "caveat": "A record status, not independent evidence."
+        },
+        {
+          "id": "site_resilience_notes",
+          "caveat": "Missing evidence in the record does not prove absence of controls."
+        },
+        {
+          "id": "operational_continuity_context",
+          "caveat": "Explains relevance, not site performance."
+        }
+      ],
+      "boundary": "No validated site-level risk, underwriting, pricing, valuation, insurability, Tier / standards compliance, BI, MFL / PML, or engineering conclusion has been made."
+    },
+    "options": [
+      {
+        "id": "request_site_evidence",
+        "label": "Request site-level evidence",
+        "description": "Request current site-level resilience evidence and refer to risk engineering if evidence remains incomplete.",
+        "isDefault": true
+      },
+      {
+        "id": "refer_risk_engineering",
+        "label": "Refer to risk engineering",
+        "description": "Refer to risk engineering for decision-grade engineering assessment if evidence remains incomplete.",
+        "isDefault": false
+      },
+      {
+        "id": "keep_under_review",
+        "label": "Keep under review with caveat",
+        "description": "Keep the asset under review when closure depends on additional evidence or committee review.",
+        "isDefault": false
+      }
+    ],
+    "downstreamActionMap": {
+      "request_site_evidence": "Open evidence request for asset owner / broker.",
+      "refer_risk_engineering": "Create referral task for risk engineering review.",
+      "keep_under_review": "Keep case open with caveat and review date."
+    },
+    "outputFields": [
+      "selectedActionId",
+      "reviewerNote",
+      "evidenceOwner"
+    ]
+  },
+  "decisionRecord": {
+    "caseId": "TVDC01-2026-REVIEW",
+    "asset": "Thames Valley DC-01",
+    "reviewType": "Portfolio physical-risk review",
+    "activeScenario": "multi-hazard",
+    "selectedSourceIds": [
+      "external_physical_risk_signal",
+      "screening_level_spatial_hazard_context",
+      "internal_portfolio_assumption",
+      "site_resilience_notes",
+      "operational_continuity_context"
+    ],
+    "selectedActionId": "request_site_evidence",
+    "nextAction": "Request current site-level resilience evidence and refer to risk engineering if evidence remains incomplete.",
+    "boundary": "No validated site-level risk, underwriting, pricing, valuation, insurability, Tier / standards compliance, BI, MFL / PML, or engineering conclusion has been made.",
+    "humanReviewRequired": true,
+    "evidenceContext": {
+      "workupSummary": "Review package across 5 selected sources: source suitability, spatial and temporal context, resilience gaps, caveats, and reviewer questions.",
+      "selectedSourceCount": 5,
+      "createdEvidenceRequestCount": 1,
+      "createdEvidenceRequestIds": [
+        "site_asset_basis"
+      ],
+      "requiredSections": [
+        "Source suitability matrix",
+        "Spatial context note",
+        "Temporal context note",
+        "Multi hazard interpretation",
+        "Data centre asset relevance",
+        "Resilience gap table",
+        "What cannot be concluded"
+      ],
+      "keyEvidenceGaps": [
+        "Site and asset basis",
+        "Flood and surface-water controls",
+        "Power continuity",
+        "Cooling continuity",
+        "Water dependency",
+        "Risk-engineering record"
+      ],
+      "sourceCaveats": [
+        {
+          "id": "external_physical_risk_signal",
+          "caveat": "Useful as context and trigger, not as final site-level evidence.",
+          "cannotSupport": [
+            "site_clearance",
+            "pricing_decision",
+            "underwriting_decision",
+            "engineering_conclusion"
+          ]
+        },
+        {
+          "id": "screening_level_spatial_hazard_context",
+          "caveat": "Needs asset-location confidence, source-scale caveats, and site-level evidence before conclusions.",
+          "cannotSupport": [
+            "building_level_resilience",
+            "flood_defence_status",
+            "operational_readiness",
+            "engineering_design"
+          ]
+        },
+        {
+          "id": "internal_portfolio_assumption",
+          "caveat": "A record status, not independent evidence.",
+          "cannotSupport": [
+            "independent_resilience_evidence"
+          ]
+        },
+        {
+          "id": "site_resilience_notes",
+          "caveat": "Missing evidence in the record does not prove absence of controls.",
+          "cannotSupport": [
+            "full_engineering_assessment"
+          ]
+        },
+        {
+          "id": "operational_continuity_context",
+          "caveat": "Explains relevance, not site performance.",
+          "cannotSupport": [
+            "verification_of_actual_controls"
+          ]
+        }
+      ],
+      "reviewQuestions": [
+        "Which site-level evidence is needed before the current portfolio assumption can be kept unchanged?",
+        "Which external signals are only suitable as review triggers rather than asset-level evidence?",
+        "Which hazards need follow-up: flood / surface water, heat, wind, water dependency, power, cooling, or BI?",
+        "Which caveats must be recorded before this case is closed?",
+        "Who should own the next evidence request: asset owner, broker, risk engineering, or portfolio team?"
+      ]
+    },
+    "status": "Human-reviewed action captured",
+    "auditTrail": [
+      "Case intake: portfolio physical-risk review created.",
+      "Information check: selected material reviewed.",
+      "Review prep: requests and supporting notes prepared.",
+      "Review decision: reviewer selected request_site_evidence.",
+      "Decision record: audit-ready packet stored for the portfolio file."
+    ]
+  },
+  "auditOutput": {
+    "recordType": "workflow_decision_packet",
+    "caseId": "TVDC01-2026-REVIEW",
+    "reference": "TVDC01-2026-REVIEW",
+    "selectedActionId": "request_site_evidence",
+    "createdEvidenceRequestIds": [
+      "site_asset_basis"
+    ],
+    "stageStatus": {
+      "queueIntake": {
+        "status": "complete",
+        "event": "queue_created",
+        "queueName": "DataCentrePhysicalRiskReview",
+        "reference": "TVDC01-2026-REVIEW",
+        "integrationMode": "queue_compatible_payload",
+        "liveQueueSubmitted": false
+      },
+      "sourcePack": {
+        "status": "complete",
+        "event": "source_pack_loaded",
+        "selectedSourceCount": 5
+      },
+      "specialistWorkup": {
+        "status": "complete",
+        "event": "workup_completed",
+        "evidenceTaskCount": 6
+      },
+      "evidenceRequest": {
+        "status": "created",
+        "event": "evidence_request_created",
+        "primaryRequestId": "site_asset_basis",
+        "createdEvidenceRequestIds": [
+          "site_asset_basis"
+        ]
+      },
+      "humanAction": {
+        "status": "captured",
+        "event": "human_action_captured",
+        "selectedActionId": "request_site_evidence",
+        "integrationMode": "human_task_model",
+        "liveActionCenterTaskCreated": false
+      },
+      "decisionPacket": {
+        "status": "generated",
+        "event": "decision_packet_generated",
+        "recordType": "workflow_decision_packet"
+      }
+    },
+    "eventHistory": [
+      {
+        "event": "queue_created",
+        "stage": "case_intake",
+        "actor": "UiPath workflow",
+        "summary": "Queue-compatible case payload created for TVDC01-2026-REVIEW."
+      },
+      {
+        "event": "source_pack_loaded",
+        "stage": "load_source_pack",
+        "actor": "Edgion source agent",
+        "summary": "5 source records loaded with scale, horizon, use, and caveats."
+      },
+      {
+        "event": "workup_completed",
+        "stage": "run_specialist_workup",
+        "actor": "Edgion specialist agents",
+        "summary": "6 evidence tasks identified for review."
+      },
+      {
+        "event": "evidence_request_created",
+        "stage": "create_evidence_request_sla",
+        "actor": "UiPath workflow controls",
+        "summary": "Primary evidence request created: site_asset_basis."
+      },
+      {
+        "event": "human_action_captured",
+        "stage": "capture_human_action",
+        "actor": "Human reviewer",
+        "summary": "Reviewer action captured: request_site_evidence."
+      },
+      {
+        "event": "decision_packet_generated",
+        "stage": "generate_audit_decision_packet",
+        "actor": "UiPath / Edgion record agent",
+        "summary": "Audit decision packet generated with case state, evidence context, human action, and boundaries."
+      }
+    ],
+    "evidenceRequestScope": {
+      "identifiedEvidenceTaskCount": 6,
+      "primaryRequestId": "site_asset_basis",
+      "primaryRequestCreated": true,
+      "note": "Six evidence tasks are identified; this workflow creates the primary site_asset_basis request before human review and leaves the remaining tasks available for follow-up."
+    },
+    "payloadSections": [
+      "queueItem",
+      "professionalWorkup",
+      "executionPlan",
+      "humanTask",
+      "decisionRecord"
+    ],
+    "boundary": "Audit packet supports governed review preparation only; it is not an underwriting, pricing, site-clearance, or engineering-certification output."
+  },
+  "outputArtifacts": [
+    "queue_item_payload",
+    "human_task_model",
+    "decision_record_json",
+    "audit_trail"
+  ]
+}

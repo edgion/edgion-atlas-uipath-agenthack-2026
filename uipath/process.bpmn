@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:uipath="http://uipath.org/schema/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_EdgionDCRisk" targetNamespace="http://bpmn.io/schema/bpmn" exporter="UiPath Studio Web (https://uipath.com)" exporterVersion="b52d90e7">
+  <bpmn:process id="Process_EdgionDCRisk" name="Process" isExecutable="true">
+    <bpmn:documentation>Edgion Data Centre Physical-Risk Work-up. Case TVDC01-2026-REVIEW, asset Thames Valley DC-01. Workflow evidence shows queue intake, source-pack work-up, modeled human review task, SLA retry/escalation controls, and audit decision packet. Edgion prepares review material only, not underwriting/pricing/engineering decisions.</bpmn:documentation>
+    <bpmn:extensionElements>
+      <uipath:migrationVersion version="15" />
+      <uipath:intsvcActivityConfig version="v2" />
+    </bpmn:extensionElements>
+    <bpmn:startEvent id="Start_1" name="Start">
+      <bpmn:extensionElements>
+        <uipath:entryPointId value="89e2846a-67c2-40c9-ad17-85e307e21441" />
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:scriptTask id="Task_CreateIntake" name="Create Queue Item: Risk Review" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+      <bpmn:script><![CDATA[
+const queueItem = {
+  queueName: "DataCentrePhysicalRiskReview",
+  reference: "TVDC01-2026-REVIEW",
+  priority: "Normal",
+  specificContent: {
+    queueReferenceId: "TVDC01-2026-REVIEW",
+    workflowState: "case_intake_created",
+    assetName: "Thames Valley DC-01",
+    assetType: "Data centre",
+    reviewType: "Portfolio physical-risk review",
+    activeScenario: "multi-hazard",
+    selectedSourceCount: 5,
+    humanReviewRequired: true,
+    slaHours: 48,
+    retryLimit: 2,
+    manualOverrideAllowed: true
+  }
+};
+return { response: queueItem };
+]]></bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="Task_LoadSourcePack" name="Load Edgion Source Pack" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+      <bpmn:script><![CDATA[
+return {
+  response: {
+    caseRef: "TVDC01-2026-REVIEW",
+    asset: "Thames Valley DC-01",
+    selectedSourceCount: 5,
+    sourceIds: [
+      "external_physical_risk_signal",
+      "screening_level_spatial_hazard_context",
+      "internal_portfolio_assumption",
+      "site_resilience_notes",
+      "operational_continuity_context"
+    ],
+    status: "source_pack_loaded"
+  }
+};
+]]></bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="Task_RunWorkup" name="Run Specialist Work-up" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+      <bpmn:script><![CDATA[
+return {
+  response: {
+    workupStatus: "Prepared",
+    workupSummary: "Physical-risk work-up completed for Thames Valley DC-01. Key findings: flood zone B, seismic zone 1, fire suppression Novec 1230, redundant power N+1, cooling PUE 1.35. Six evidence tasks identified.",
+    evidenceTaskCount: 6,
+    evidenceRequestIds: ["site_asset_basis"],
+    enterpriseControls: {
+      queueName: "DataCentrePhysicalRiskReview",
+      slaHours: 48,
+      retryPolicy: { maxAttempts: 2, retryAfterHours: 24 },
+      escalationPath: ["Portfolio risk lead", "Risk engineering"],
+      auditEvents: ["queue_item_created", "source_pack_loaded", "specialist_workup_prepared"]
+    }
+  }
+};
+]]></bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:exclusiveGateway id="Gw_Prepared" name="Work-up + Evidence Ready?" default="Flow_No">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_No</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Yes</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:scriptTask id="Task_MarkRetry" name="Evidence Missing: Retry / Escalate" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_No</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+      <bpmn:script><![CDATA[
+return {
+  response: {
+    caseRef: "TVDC01-2026-REVIEW",
+    workflowState: "evidence_incomplete_retry_or_escalate",
+    retryPolicy: { maxAttempts: 2, retryAfterHours: 24 },
+    escalationOwner: "Portfolio risk lead",
+    escalationReason: "evidence_missing_after_sla",
+    manualOverrideAllowed: true,
+    productBoundary: "Workflow control path; not an underwriting, pricing, or site-clearance decision."
+  }
+};
+]]></bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:endEvent id="End_Retry" name="Retry / Escalate End">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:scriptTask id="Task_EvidenceRequest" name="Create Evidence Request + SLA" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_Yes</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+      <bpmn:script><![CDATA[
+return {
+  response: {
+    caseRef: "TVDC01-2026-REVIEW",
+    asset: "Thames Valley DC-01",
+    evidenceType: "site_asset_basis",
+    evidenceOwner: "Thames Valley DC Facilities Team",
+    requestId: "site_asset_basis",
+    slaHours: 48,
+    retryPolicy: { maxAttempts: 2, retryAfterHours: 24 },
+    escalationOwner: "Portfolio risk lead",
+    status: "evidence_requested"
+  }
+};
+]]></bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="Task_SlaControls" name="Apply SLA / Retry Controls" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_6b</bpmn:outgoing>
+      <bpmn:script><![CDATA[
+return {
+  response: {
+    caseRef: "TVDC01-2026-REVIEW",
+    openEvidenceRequestIds: ["site_asset_basis"],
+    workflowState: "sla_monitoring_active",
+    slaHours: 48,
+    retryCount: 0,
+    retryLimit: 2,
+    waitRetryEscalatePath: ["wait_for_evidence", "retry_request", "escalate_to_portfolio_risk_lead"],
+    manualOverrideAllowed: true,
+    nextState: "human_review_task_modeled"
+  }
+};
+]]></bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="Task_HumanReview" name="Model Human Review Task" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_6b</bpmn:incoming>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+      <bpmn:script><![CDATA[
+return {
+  response: {
+    integrationMode: "human_task_model",
+    selectedActionId: "request_site_evidence",
+    reviewerNote: "Awaiting site_asset_basis evidence package from asset owner.",
+    evidenceOwner: "Thames Valley DC Facilities Team",
+    allowedActions: ["request_site_evidence", "refer_risk_engineering", "proceed_with_caveats"],
+    caseId: "TVDC01-2026-REVIEW",
+    assetName: "Thames Valley DC-01",
+    workupSummary: "Physical-risk work-up completed for Thames Valley DC-01. Key findings: flood zone B, seismic zone 1, fire suppression Novec 1230, redundant power N+1, cooling PUE 1.35. Six evidence tasks identified.",
+    evidenceTaskCount: 6,
+    productBoundary: "Modeled human review task; not a live Action Center task in this MVP package.",
+    professionalBoundary: "Edgion prepares review material only, not underwriting/pricing/engineering decisions."
+  }
+};
+]]></bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="Task_CaptureAction" name="Capture Action + Override" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+      <bpmn:script><![CDATA[
+return {
+  response: {
+    reviewerAction: "Waiting for Site Evidence",
+    selectedActionId: "request_site_evidence",
+    reviewerNote: "Awaiting site_asset_basis evidence package from asset owner.",
+    evidenceOwner: "Thames Valley DC Facilities Team",
+    manualOverrideRequested: false,
+    openEvidenceRequestIds: ["site_asset_basis"],
+    auditEvent: "reviewer_action_captured"
+  }
+};
+]]></bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:exclusiveGateway id="Gw_WhichAction" name="Action / Override?" default="Flow_Caveat">
+      <bpmn:incoming>Flow_8</bpmn:incoming>
+      <bpmn:outgoing>Flow_Waiting</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Referred</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Caveat</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="Gw_Join" name="Join Actions">
+      <bpmn:incoming>Flow_Waiting</bpmn:incoming>
+      <bpmn:incoming>Flow_Referred</bpmn:incoming>
+      <bpmn:incoming>Flow_Caveat</bpmn:incoming>
+      <bpmn:outgoing>Flow_Join</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:scriptTask id="Task_GenerateDecision" name="Generate Audit Decision Packet" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_Join</bpmn:incoming>
+      <bpmn:outgoing>Flow_9</bpmn:outgoing>
+      <bpmn:script><![CDATA[
+return {
+  response: {
+    recordType: "workflow_decision_packet",
+    queueReferenceId: "TVDC01-2026-REVIEW",
+    caseRef: "TVDC01-2026-REVIEW",
+    asset: "Thames Valley DC-01",
+    reviewerAction: "Waiting for Site Evidence",
+    workupSummary: "Physical-risk work-up completed for Thames Valley DC-01. Key findings: flood zone B, seismic zone 1, fire suppression Novec 1230, redundant power N+1, cooling PUE 1.35. Six evidence tasks identified.",
+    evidenceTaskCount: 6,
+    createdEvidenceRequestIds: ["site_asset_basis"],
+    payloadSections: ["queueItem", "professionalWorkup", "executionPlan", "humanTask", "decisionRecord"],
+    enterpriseControls: {
+      queueName: "DataCentrePhysicalRiskReview",
+      slaHours: 48,
+      retryPolicy: { maxAttempts: 2, retryAfterHours: 24 },
+      escalationPath: ["Portfolio risk lead", "Risk engineering"],
+      manualOverrideAllowed: true
+    },
+    reviewerNote: "Awaiting site_asset_basis evidence package from asset owner.",
+    evidenceOwner: "Thames Valley DC Facilities Team",
+    productBoundary: "Modeled human review task; not a live Action Center task in this MVP package.",
+    professionalBoundary: "Edgion prepares review material only, not underwriting/pricing/engineering decisions.",
+    generatedAt: new Date().toISOString(),
+    status: "audit_packet_generated"
+  }
+};
+]]></bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:endEvent id="End_Main" name="Audit Packet End">
+      <bpmn:incoming>Flow_9</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="Start_1" targetRef="Task_CreateIntake" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_CreateIntake" targetRef="Task_LoadSourcePack" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_LoadSourcePack" targetRef="Task_RunWorkup" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_RunWorkup" targetRef="Gw_Prepared" />
+    <bpmn:sequenceFlow id="Flow_No" sourceRef="Gw_Prepared" targetRef="Task_MarkRetry" />
+    <bpmn:sequenceFlow id="Flow_Yes" sourceRef="Gw_Prepared" targetRef="Task_EvidenceRequest">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Task_MarkRetry" targetRef="End_Retry" />
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_EvidenceRequest" targetRef="Task_SlaControls" />
+    <bpmn:sequenceFlow id="Flow_6b" sourceRef="Task_SlaControls" targetRef="Task_HumanReview" />
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="Task_HumanReview" targetRef="Task_CaptureAction" />
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="Task_CaptureAction" targetRef="Gw_WhichAction" />
+    <bpmn:sequenceFlow id="Flow_Waiting" sourceRef="Gw_WhichAction" targetRef="Gw_Join">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Referred" sourceRef="Gw_WhichAction" targetRef="Gw_Join">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Caveat" sourceRef="Gw_WhichAction" targetRef="Gw_Join" />
+    <bpmn:sequenceFlow id="Flow_Join" sourceRef="Gw_Join" targetRef="Task_GenerateDecision" />
+    <bpmn:sequenceFlow id="Flow_9" sourceRef="Task_GenerateDecision" targetRef="End_Main" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_1">
+    <bpmndi:BPMNPlane id="Plane_1" bpmnElement="Process_EdgionDCRisk">
+      <bpmndi:BPMNShape id="S_Start_1" bpmnElement="Start_1">
+        <dc:Bounds x="160" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="160" y="343" width="36" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Task_CreateIntake" bpmnElement="Task_CreateIntake">
+        <dc:Bounds x="250" y="280" width="120" height="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="250" y="365" width="120" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Task_LoadSourcePack" bpmnElement="Task_LoadSourcePack">
+        <dc:Bounds x="410" y="280" width="120" height="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="410" y="365" width="120" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Task_RunWorkup" bpmnElement="Task_RunWorkup">
+        <dc:Bounds x="570" y="280" width="120" height="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="570" y="365" width="120" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Gw_Prepared" bpmnElement="Gw_Prepared">
+        <dc:Bounds x="730" y="295" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="730" y="350" width="50" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Task_MarkRetry" bpmnElement="Task_MarkRetry">
+        <dc:Bounds x="705" y="80" width="140" height="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="705" y="165" width="140" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_End_Retry" bpmnElement="End_Retry">
+        <dc:Bounds x="900" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="900" y="143" width="36" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Task_EvidenceRequest" bpmnElement="Task_EvidenceRequest">
+        <dc:Bounds x="850" y="280" width="160" height="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="850" y="365" width="160" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Task_SlaControls" bpmnElement="Task_SlaControls">
+        <dc:Bounds x="1050" y="280" width="150" height="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1050" y="365" width="150" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Task_HumanReview" bpmnElement="Task_HumanReview">
+        <dc:Bounds x="1230" y="280" width="140" height="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1230" y="365" width="140" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Task_CaptureAction" bpmnElement="Task_CaptureAction">
+        <dc:Bounds x="1410" y="280" width="140" height="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1410" y="365" width="140" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Gw_WhichAction" bpmnElement="Gw_WhichAction">
+        <dc:Bounds x="1590" y="295" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1590" y="350" width="50" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Gw_Join" bpmnElement="Gw_Join">
+        <dc:Bounds x="1690" y="295" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1690" y="350" width="50" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Task_GenerateDecision" bpmnElement="Task_GenerateDecision">
+        <dc:Bounds x="1790" y="280" width="140" height="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1790" y="365" width="140" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_End_Main" bpmnElement="End_Main">
+        <dc:Bounds x="1980" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1980" y="343" width="36" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_1" bpmnElement="Flow_1">
+        <di:waypoint x="196" y="320" />
+        <di:waypoint x="250" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_2" bpmnElement="Flow_2">
+        <di:waypoint x="370" y="320" />
+        <di:waypoint x="410" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_3" bpmnElement="Flow_3">
+        <di:waypoint x="530" y="320" />
+        <di:waypoint x="570" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_4" bpmnElement="Flow_4">
+        <di:waypoint x="690" y="320" />
+        <di:waypoint x="730" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_No" bpmnElement="Flow_No">
+        <di:waypoint x="755" y="295" />
+        <di:waypoint x="755" y="160" />
+        <di:waypoint x="705" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_Yes" bpmnElement="Flow_Yes">
+        <di:waypoint x="780" y="320" />
+        <di:waypoint x="850" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_5" bpmnElement="Flow_5">
+        <di:waypoint x="845" y="120" />
+        <di:waypoint x="900" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_6" bpmnElement="Flow_6">
+        <di:waypoint x="1010" y="320" />
+        <di:waypoint x="1050" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_6b" bpmnElement="Flow_6b">
+        <di:waypoint x="1200" y="320" />
+        <di:waypoint x="1230" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_7" bpmnElement="Flow_7">
+        <di:waypoint x="1370" y="320" />
+        <di:waypoint x="1410" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_8" bpmnElement="Flow_8">
+        <di:waypoint x="1550" y="320" />
+        <di:waypoint x="1590" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_Waiting" bpmnElement="Flow_Waiting">
+        <di:waypoint x="1615" y="345" />
+        <di:waypoint x="1615" y="420" />
+        <di:waypoint x="1715" y="420" />
+        <di:waypoint x="1715" y="345" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_Referred" bpmnElement="Flow_Referred">
+        <di:waypoint x="1640" y="320" />
+        <di:waypoint x="1690" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_Caveat" bpmnElement="Flow_Caveat">
+        <di:waypoint x="1615" y="295" />
+        <di:waypoint x="1615" y="220" />
+        <di:waypoint x="1715" y="220" />
+        <di:waypoint x="1715" y="295" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_Join" bpmnElement="Flow_Join">
+        <di:waypoint x="1740" y="320" />
+        <di:waypoint x="1790" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_9" bpmnElement="Flow_9">
+        <di:waypoint x="1930" y="320" />
+        <di:waypoint x="1980" y="320" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

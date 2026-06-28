@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Edgion Atlas - UiPath AgentHack Submission Deck</title>
+  <style>
+    @page { size: 16in 9in; margin: 0; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #13201c;
+      background: #f5f7f4;
+    }
+    .slide {
+      width: 16in;
+      height: 9in;
+      padding: 0.72in 0.92in;
+      page-break-after: always;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      background: #fbfaf6;
+    }
+    .slide:last-child { page-break-after: auto; }
+    .slide:nth-child(even) { background: #f0f5f3; }
+    .wordmark {
+      position: absolute;
+      right: 0.72in;
+      top: 0.48in;
+      width: 1.55in;
+      height: auto;
+      opacity: 0.92;
+    }
+    .watermark {
+      position: absolute;
+      right: -0.72in;
+      bottom: -0.82in;
+      width: 4.8in;
+      height: auto;
+      opacity: 0.052;
+      pointer-events: none;
+    }
+    .num {
+      position: absolute;
+      right: 0.72in;
+      bottom: 0.42in;
+      font-size: 15px;
+      color: #73807b;
+    }
+    .kicker {
+      font-size: 17px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #496f62;
+      font-weight: 700;
+      margin-bottom: 0.22in;
+    }
+    h1, h2 {
+      margin: 0;
+      letter-spacing: 0;
+      max-width: 12.5in;
+    }
+    h1 {
+      font-size: 62px;
+      line-height: 1.04;
+      margin-bottom: 0.28in;
+    }
+    h2 {
+      font-size: 44px;
+      line-height: 1.12;
+      margin-bottom: 0.34in;
+    }
+    p {
+      font-size: 25px;
+      line-height: 1.34;
+      max-width: 12.2in;
+      margin: 0 0 0.2in;
+      color: #2d3834;
+    }
+    ul {
+      margin: 0;
+      padding-left: 0.34in;
+      max-width: 12.4in;
+    }
+    li {
+      font-size: 23px;
+      line-height: 1.3;
+      margin-bottom: 0.15in;
+      color: #2f3b36;
+    }
+    .meta {
+      color: #65716d;
+      font-size: 20px;
+      margin-top: 0.35in;
+    }
+    .positioning {
+      color: #65716d;
+      font-size: 21px;
+      line-height: 1.32;
+      margin-top: 0.1in;
+      font-weight: 700;
+    }
+    .case-note {
+      color: #65716d;
+      font-size: 17px;
+      line-height: 1.28;
+      margin: -0.16in 0 0.2in;
+      max-width: 8.5in;
+    }
+    .footer {
+      position: absolute;
+      left: 0.92in;
+      bottom: 0.42in;
+      font-size: 15px;
+      color: #7a827e;
+    }
+    .slide:first-child::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.72in;
+      bottom: 0.72in;
+      width: 0.035in;
+      background: rgba(12, 143, 118, 0.54);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.25in;
+      width: 100%;
+      margin-top: 0.12in;
+    }
+    .grid.two { grid-template-columns: repeat(2, 1fr); }
+    .card {
+      background: rgba(255,255,255,0.9);
+      border: 1px solid #d9e2dd;
+      border-radius: 8px;
+      padding: 0.28in;
+      min-height: 2.08in;
+    }
+    .card h3 {
+      font-size: 24px;
+      line-height: 1.15;
+      margin: 0 0 0.14in;
+      color: #123d34;
+    }
+    .card p, .card li {
+      font-size: 19px;
+      line-height: 1.3;
+      margin-bottom: 0.1in;
+    }
+    .visual-layout {
+      display: grid;
+      grid-template-columns: 5.2in 1fr;
+      gap: 0.52in;
+      align-items: center;
+      width: 100%;
+    }
+    .visual-layout.reverse {
+      grid-template-columns: 1fr 5.15in;
+    }
+    .visual-copy h2 {
+      font-size: 38px;
+      line-height: 1.14;
+      margin-bottom: 0.22in;
+      max-width: 5.2in;
+    }
+    .visual-copy p {
+      font-size: 21px;
+      line-height: 1.3;
+      margin-bottom: 0.18in;
+    }
+    .visual-copy ul {
+      padding-left: 0.26in;
+      max-width: 5.4in;
+    }
+    .visual-copy li {
+      font-size: 19px;
+      line-height: 1.28;
+      margin-bottom: 0.12in;
+    }
+    .figure {
+      background: #ffffff;
+      border: 1px solid rgba(217, 226, 221, 0.58);
+      border-radius: 7px;
+      padding: 0.055in;
+      box-shadow: 0 8px 22px rgba(22, 45, 38, 0.055);
+    }
+    .figure.crop {
+      overflow: hidden;
+      min-height: 5.25in;
+    }
+    .figure img {
+      display: block;
+      width: 100%;
+      max-height: 5.85in;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+    .figure.crop img {
+      height: 5.05in;
+      max-height: none;
+      object-fit: cover;
+      object-position: top left;
+    }
+    .figure.crop.record img {
+      object-position: 49% 0;
+    }
+    .figure-caption {
+      margin: 0.06in 0 0;
+      font-size: 12px;
+      line-height: 1.25;
+      color: #7a8580;
+      max-width: none;
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.11in;
+      margin-top: 0.18in;
+      width: 100%;
+    }
+    .step {
+      background: #ffffff;
+      border: 1px solid #d9e2dd;
+      border-radius: 8px;
+      padding: 0.18in 0.15in;
+      min-height: 1.28in;
+      font-size: 17px;
+      line-height: 1.23;
+      color: #31413b;
+      position: relative;
+    }
+    .step strong {
+      display: block;
+      color: #123d34;
+      font-size: 18px;
+      margin-bottom: 0.07in;
+    }
+    .step:not(:last-child)::after {
+      content: ">";
+      position: absolute;
+      right: -0.105in;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #0c8f76;
+      font-size: 20px;
+      font-weight: 700;
+      z-index: 2;
+    }
+    .split-figure {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.16in;
+      align-items: stretch;
+    }
+    .split-figure .figure {
+      min-height: 4.55in;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .uipath-grid {
+      display: grid;
+      grid-template-columns: 8.4in 4.25in;
+      gap: 0.58in;
+      align-items: start;
+      width: 100%;
+    }
+    .uipath-panel {
+      background: rgba(255,255,255,0.92);
+      border: 1px solid #edf2ef;
+      border-radius: 8px;
+      padding: 0.28in;
+      box-shadow: 0 10px 26px rgba(22, 45, 38, 0.06);
+    }
+    .uipath-panel.bare {
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      padding: 0;
+    }
+    .uipath-flow {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.14in;
+      margin-top: 0.12in;
+    }
+    .workflow-proof-large {
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      padding: 0;
+      min-height: 2.65in;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .workflow-proof-large img {
+      display: block;
+      width: 100%;
+      max-height: 3.05in;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+    .uipath-node {
+      border: 1px solid rgba(12, 143, 118, 0.28);
+      border-radius: 8px;
+      padding: 0.17in;
+      min-height: 1.08in;
+      background: #fbfdfb;
+      position: relative;
+    }
+    .uipath-node::before {
+      content: attr(data-step);
+      display: inline-block;
+      font-size: 11px;
+      line-height: 1;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #496f62;
+      font-weight: 700;
+      margin-bottom: 0.09in;
+    }
+    .uipath-node h3 {
+      margin: 0 0 0.06in;
+      font-size: 19px;
+      line-height: 1.12;
+      color: #123d34;
+    }
+    .uipath-node p {
+      font-size: 15px;
+      line-height: 1.24;
+      margin: 0;
+      color: #44534d;
+    }
+    .capability-row {
+      display: grid;
+      grid-template-columns: 1.45in 1fr;
+      gap: 0.16in;
+      padding: 0.15in 0;
+      border-top: 1px solid #d9e2dd;
+    }
+    .capability-row:first-child { border-top: 0; padding-top: 0; }
+    .capability-row strong {
+      font-size: 16px;
+      line-height: 1.2;
+      color: #123d34;
+    }
+    .capability-row span {
+      font-size: 15px;
+      line-height: 1.28;
+      color: #44534d;
+    }
+    .why-uipath h3 {
+      margin: 0 0 0.24in;
+      font-size: 23px;
+      line-height: 1.18;
+      color: #123d34;
+    }
+    .why-uipath.bare {
+      padding-top: 0.12in;
+      border-left: 4px solid rgba(12, 143, 118, 0.45);
+      padding-left: 0.28in;
+    }
+    .why-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.18in;
+      margin: 0.02in 0 0;
+    }
+    .why-item {
+      font-size: 18px;
+      line-height: 1.34;
+      color: #33413c;
+      font-weight: 500;
+    }
+    .why-item::before,
+    .badge::before {
+      content: "✓";
+      color: #0c8f76;
+      font-weight: 700;
+      margin-right: 0.08in;
+    }
+    .proof-strip {
+      display: flex;
+      gap: 0.12in;
+      margin-top: 0.28in;
+      flex-wrap: wrap;
+    }
+    .proof-pill {
+      border: 1px solid rgba(12, 143, 118, 0.28);
+      background: #eef8f4;
+      color: #123d34;
+      border-radius: 999px;
+      padding: 0.08in 0.12in;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .proof-image {
+      margin-top: 0.18in;
+      background: #ffffff;
+      border: 1px solid #edf2ef;
+      border-radius: 8px;
+      padding: 0.08in;
+    }
+    .proof-image img {
+      width: 100%;
+      display: block;
+      border-radius: 4px;
+      max-height: 1.7in;
+      object-fit: contain;
+      object-position: center center;
+    }
+    .callout {
+      border-left: 6px solid #0c8f76;
+      padding-left: 0.24in;
+      font-size: 24px;
+      line-height: 1.34;
+      max-width: 11.2in;
+      color: #4a5752;
+      font-weight: 500;
+      margin-top: 0.02in;
+    }
+    .agent-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.13in;
+      width: 5.15in;
+    }
+    .agent-card {
+      background: rgba(255,255,255,0.92);
+      border: 1px solid #d9e2dd;
+      border-radius: 8px;
+      padding: 0.16in;
+      min-height: 1.48in;
+    }
+    .agent-card h3 {
+      margin: 0 0 0.08in;
+      font-size: 17px;
+      line-height: 1.12;
+      color: #123d34;
+    }
+    .field {
+      display: grid;
+      grid-template-columns: 1.08in 1fr;
+      gap: 0.07in;
+      margin-bottom: 0.055in;
+      font-size: 12.5px;
+      line-height: 1.18;
+      color: #44534d;
+    }
+    .field strong {
+      color: #496f62;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 10px;
+    }
+    .decision-panel h3 {
+      margin: 0 0 0.15in;
+      font-size: 24px;
+      line-height: 1.14;
+      color: #123d34;
+    }
+    .decision-field {
+      margin: 0 0 0.16in;
+    }
+    .decision-label {
+      display: block;
+      color: #496f62;
+      font-size: 13px;
+      line-height: 1;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 0.055in;
+    }
+    .decision-value {
+      font-size: 23px;
+      line-height: 1.2;
+      color: #14231f;
+      font-weight: 700;
+    }
+    .decision-text {
+      font-size: 17.5px;
+      line-height: 1.34;
+      color: #2f3b36;
+    }
+    .decision-actions {
+      margin: 0.02in 0 0;
+      padding-left: 0.23in;
+    }
+    .decision-actions li {
+      font-size: 18px;
+      line-height: 1.24;
+      margin-bottom: 0.07in;
+    }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.095in;
+      margin-top: 0.21in;
+    }
+    .badge {
+      border: 1px solid rgba(12, 143, 118, 0.28);
+      background: #eef8f4;
+      color: #123d34;
+      border-radius: 999px;
+      padding: 0.08in 0.12in;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .tight h2 { margin-bottom: 0.24in; }
+    .tight li { font-size: 21px; }
+  </style>
+</head>
+<body>
+  <section class="slide">
+    <img class="wordmark" src="assets/edgion-wordmark-deck.png" alt="Edgion">
+    <img class="watermark" src="assets/mark.svg" alt="">
+    <div class="kicker">UiPath AgentHack 2026</div>
+    <h1>Edgion Atlas turns scattered physical-risk signals into a review case file.</h1>
+    <p>Specialist agents prepare the review package. UiPath routes the case and records the decision.</p>
+    <div class="positioning">Agents prepare. UiPath governs. Humans decide.</div>
+    <div class="meta">Edgion Ltd | UK physical-risk intelligence | edgion.co.uk</div>
+    <div class="footer">Submission deck | Review package + UiPath case record</div>
+  </section>
+
+  <section class="slide tight">
+    <img class="wordmark" src="assets/edgion-wordmark-deck.png" alt="Edgion">
+    <img class="watermark" src="assets/mark.svg" alt="">
+    <div class="num">01</div>
+    <div class="kicker">Problem</div>
+    <h2>Thames Valley DC-01 entered review with a credible flood signal and missing resilience evidence.</h2>
+    <p class="case-note">Sample review case for award demo. Not a client asset.</p>
+    <ul>
+      <li>Portfolio review opened for a synthetic data-centre asset in the Thames Valley.</li>
+      <li>Five source records were checked; two hazard datasets were selected and one coarse flood layer was excluded from file closure.</li>
+      <li>The affected-area signal intersected the asset area, but the site file lacked drainage and backup-power evidence.</li>
+      <li>The case moved to evidence request instead of file closure.</li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <img class="wordmark" src="assets/edgion-wordmark-deck.png" alt="Edgion">
+    <img class="watermark" src="assets/mark.svg" alt="">
+    <div class="num">02</div>
+    <div class="kicker">MVP Scope</div>
+    <h2>Review package prepared before the human decision.</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Source package</h3>
+        <p>Five source records checked. Two hazard datasets selected. One coarse-resolution flood source excluded from file closure.</p>
+      </div>
+      <div class="card">
+        <h3>Case context</h3>
+        <p>Flood signal intersects the affected asset area. Confidence marked high for portfolio review.</p>
+      </div>
+      <div class="card">
+        <h3>Evidence request</h3>
+        <p>Drainage drawings, backup generator location, and cooling continuity note requested before file closure.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <img class="wordmark" src="assets/edgion-wordmark-deck.png" alt="Edgion">
+    <img class="watermark" src="assets/mark.svg" alt="">
+    <div class="num">03</div>
+    <div class="kicker">Product Workbench</div>
+    <div class="visual-layout">
+      <div class="visual-copy">
+        <h2>The reviewer starts from a case that already needs action.</h2>
+        <p>Thames Valley DC-01 has an active flood review, incomplete resilience evidence, and a next workflow step.</p>
+        <ul>
+          <li>Portfolio review opened</li>
+          <li>Hazard signal mapped</li>
+          <li>Evidence gap visible</li>
+          <li>Next action: prepare review package</li>
+        </ul>
+      </div>
+      <div class="figure crop">
+        <img src="../screenshots/product-flow/01-case.png" alt="Edgion Atlas case screen">
+        <div class="figure-caption">Latest 8770 product screen: case intake with map context and workflow status.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <img class="wordmark" src="assets/edgion-wordmark-deck.png" alt="Edgion">
+    <img class="watermark" src="assets/mark.svg" alt="">
+    <div class="num">04</div>
+    <div class="kicker">Agent Work-up</div>
+    <div class="visual-layout reverse">
+      <div class="figure crop">
+        <img src="../screenshots/product-flow/04-workup-ready.png" alt="Agent work-up screen">
+        <div class="figure-caption">Review package prepared: source caveats, spatial context, and evidence requests are ready for human review.</div>
+      </div>
+      <div class="visual-copy">
+        <div class="agent-summary-grid">
+          <div class="agent-card">
+            <h3>Source Suitability Agent</h3>
+            <div class="field"><strong>Status</strong><span>Completed</span></div>
+            <div class="field"><strong>Output</strong><span>5 source records checked; 2 hazard datasets selected.</span></div>
+            <div class="field"><strong>Missing</strong><span>None for portfolio screening.</span></div>
+            <div class="field"><strong>Recommendation</strong><span>Do not use coarse flood layer for file closure.</span></div>
+          </div>
+          <div class="agent-card">
+            <h3>Spatial Context Agent</h3>
+            <div class="field"><strong>Status</strong><span>Completed</span></div>
+            <div class="field"><strong>Output</strong><span>Flood signal intersects affected asset area.</span></div>
+            <div class="field"><strong>Missing</strong><span>No further location check needed.</span></div>
+            <div class="field"><strong>Recommendation</strong><span>Use this location context in the review.</span></div>
+          </div>
+          <div class="agent-card">
+            <h3>Resilience Agent</h3>
+            <div class="field"><strong>Status</strong><span>Evidence required</span></div>
+            <div class="field"><strong>Output</strong><span>Site file incomplete.</span></div>
+            <div class="field"><strong>Missing</strong><span>Drainage drawings; generator location; cooling note.</span></div>
+            <div class="field"><strong>Recommendation</strong><span>Request resilience evidence.</span></div>
+          </div>
+          <div class="agent-card">
+            <h3>Review Prep Agent</h3>
+            <div class="field"><strong>Status</strong><span>Ready</span></div>
+            <div class="field"><strong>Output</strong><span>Review package prepared.</span></div>
+            <div class="field"><strong>Missing</strong><span>Reviewer evidence response.</span></div>
+            <div class="field"><strong>Recommendation</strong><span>Request evidence before file closure.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <img class="wordmark" src="assets/edgion-wordmark-deck.png" alt="Edgion">
+    <img class="watermark" src="assets/mark.svg" alt="">
+    <div class="num">05</div>
+    <div class="kicker">UiPath Orchestration</div>
+    <h2>This is a case lifecycle, not a one-off automated answer.</h2>
+    <div class="flow">
+      <div class="step"><strong>Case intake</strong>Portfolio signal opened.</div>
+      <div class="step"><strong>Source pack</strong>Datasets selected.</div>
+      <div class="step"><strong>Agent work-up</strong>Review package prepared.</div>
+      <div class="step"><strong>Evidence request</strong>Resilience evidence requested.</div>
+      <div class="step"><strong>Human review</strong>Reviewer selected next action.</div>
+      <div class="step"><strong>Record</strong>Audit-ready packet generated.</div>
+    </div>
+    <div class="meta">The agents prepare the review. UiPath keeps the case alive until evidence, reviewer action, and record are complete.</div>
+  </section>
+
+  <section class="slide">
+    <img class="wordmark" src="assets/edgion-wordmark-deck.png" alt="Edgion">
+    <img class="watermark" src="assets/mark.svg" alt="">
+    <div class="num">06</div>
+    <div class="kicker">UiPath Evidence</div>
+    <h2>Agents prepare one review. UiPath controls the case around it.</h2>
+    <div class="uipath-grid">
+      <div class="uipath-panel bare">
+        <div class="workflow-proof-large">
+          <img src="../uipath/screenshots/workflow_canvas_deck.png" alt="UiPath Studio workflow canvas proof">
+        </div>
+        <div class="proof-strip">
+          <span class="proof-pill">Studio Web / Maestro BPMN</span>
+          <span class="proof-pill">Debug run successful</span>
+          <span class="proof-pill">Published v1.0.1</span>
+        </div>
+      </div>
+      <div class="uipath-panel why-uipath bare">
+        <h3>Why not just generic automation?</h3>
+        <div class="why-list">
+          <div class="why-item">Agents answer: what did we find?</div>
+          <div class="why-item">UiPath answers: who owns this case now?</div>
+          <div class="why-item">Human review required before close</div>
+          <div class="why-item">Evidence wait states and routing</div>
+          <div class="why-item">Audit trail for the whole case</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <img class="wordmark" src="assets/edgion-wordmark-deck.png" alt="Edgion">
+    <img class="watermark" src="assets/mark.svg" alt="">
+    <div class="num">07</div>
+    <div class="kicker">Decision Record</div>
+    <div class="visual-layout reverse">
+      <div class="figure crop record">
+        <img src="../screenshots/product-flow/08-record-top.png" alt="Decision record screen">
+        <div class="figure-caption">Decision record generated after the reviewer requested additional resilience evidence.</div>
+      </div>
+      <div class="visual-copy decision-panel">
+        <h3>Review outcome</h3>
+        <div class="decision-field">
+          <span class="decision-label">Decision</span>
+          <div class="decision-value">Request Evidence</div>
+        </div>
+        <div class="decision-field">
+          <span class="decision-label">Reason</span>
+          <div class="decision-text">The work-up is complete: five source records checked, two hazard datasets selected, flood area checked against DC-01, and resilience evidence is still missing. Review closure is paused until drainage, backup power, and cooling evidence is provided.</div>
+        </div>
+        <div class="decision-field">
+          <span class="decision-label">Next Action</span>
+          <ul class="decision-actions">
+            <li>Request drainage drawings</li>
+            <li>Request backup power specification</li>
+          </ul>
+        </div>
+        <div class="decision-field">
+          <span class="decision-label">Reviewer</span>
+          <div class="decision-value">Selected next action</div>
+        </div>
+        <div class="badge-row">
+          <span class="badge">Audit trail attached</span>
+          <span class="badge">Source caveats preserved</span>
+          <span class="badge">Workflow history recorded</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <img class="wordmark" src="assets/edgion-wordmark-deck.png" alt="Edgion">
+    <img class="watermark" src="assets/mark.svg" alt="">
+    <div class="num">08</div>
+    <div class="kicker">Case Outcome</div>
+    <h2>The useful agent is not the one that makes the final asset decision.</h2>
+    <div class="callout">It knows the source limits, finds missing evidence, asks the right human question, and leaves UiPath with a traceable record.</div>
+    <div class="grid" style="margin-top:0.38in;">
+      <div class="card">
+        <h3>Built now</h3>
+        <p>Case opened, review package prepared, human action captured, and decision record generated.</p>
+      </div>
+      <div class="card">
+        <h3>Production path</h3>
+        <p>Portfolio review queue → UiPath Queue/API → Action Center or Action App → source connectors → auditable record store.</p>
+      </div>
+      <div class="card">
+        <h3>Team value</h3>
+        <p>Helps teams prepare reviews faster, with a record they can defend.</p>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

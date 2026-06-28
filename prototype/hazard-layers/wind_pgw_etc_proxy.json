@@ -1,0 +1,39 @@
+{
+  "bbox": {
+    "east": 0.4,
+    "north": 52,
+    "south": 50.9,
+    "west": -1.6
+  },
+  "commercial_suitability": "Synthetic screening proxy for UI walkthrough only; not a public climatological probability product.",
+  "crs": "EPSG:4326 synthetic raster image overlay",
+  "data_kind": "synthetic_screening_proxy",
+  "display_name": "Wind: storm footprint proxy",
+  "files": {
+    "png": "public/hazard-layers/wind_pgw_etc_proxy.png",
+    "preview": "public/hazard-previews/wind_pgw_etc_proxy_raw_vs_enhanced.png",
+    "raw_png": "public/hazard-layers/wind_pgw_etc_proxy_raw.png",
+    "visual_png": "hazard-layers/visual/wind_pgw_etc_proxy_visual.png"
+  },
+  "hazard_type": "wind",
+  "id": "wind_pgw_etc_proxy",
+  "legend_bins": {
+    "0.0": "none",
+    "0.25": "25% selected cases",
+    "0.5": "50% selected cases",
+    "1.0": "100% selected cases"
+  },
+  "license_note": "Synthetic screening artifact generated for this hackathon package; not sourced from internal model output.",
+  "max": 0.75,
+  "min": 0.2500019967556,
+  "nodata": "NaN / transparent alpha",
+  "processing_script": "Generated synthetic screening raster for public hackathon package",
+  "rendering_settings": {
+    "opacity": 0.68,
+    "style": "transparent synthetic screening raster overlay"
+  },
+  "resolution": "Synthetic raster generated for screening map overlay",
+  "source": "Synthetic screening proxy",
+  "source_attribution": "Synthetic screening proxy generated for Edgion Atlas AgentHack UI",
+  "source_url": ""
+}

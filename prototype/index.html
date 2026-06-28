@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Edgion Professional Review Workflow Prototype</title>
+    <meta
+      name="description"
+      content="Professional review workflow prototype for evidence-led reviewer action."
+    />
+    <link rel="icon" href="data:," />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="./styles.css?v=processed-hazard-map-21" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <button class="brand-home" type="button" data-view="case" aria-label="Go to workflow home">
+            <svg class="brand-logo" viewBox="0 0 174 46" role="img" aria-label="Edgion" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="brand-ion" cx=".36" cy=".32" r=".50" fx=".33" fy=".27">
+                <stop offset="0%" stop-color="#5EFCE4" />
+                <stop offset="25%" stop-color="#2EECC1" />
+                <stop offset="65%" stop-color="#00C8A0" />
+                <stop offset="100%" stop-color="#009E7A" />
+              </radialGradient>
+              <radialGradient id="brand-highlight" cx=".33" cy=".28" r=".22">
+                <stop offset="0%" stop-color="#fff" stop-opacity=".92" />
+                <stop offset="100%" stop-color="#fff" stop-opacity="0" />
+              </radialGradient>
+            </defs>
+            <g transform="scale(.46)" fill="none">
+              <path d="M68,26 A32,32 0 1 0 68,74" stroke="#1A1F36" stroke-width="5" stroke-linecap="round" />
+              <path d="M64,31 A26,26 0 1 0 64,69" stroke="#1A1F36" stroke-width="1.4" stroke-linecap="round" opacity=".28" />
+              <circle cx="76" cy="50" r="8.5" fill="url(#brand-ion)" />
+              <circle cx="73.5" cy="47" r="3.6" fill="url(#brand-highlight)" />
+              <circle cx="64" cy="31" r="1.8" fill="#1A1F36" opacity=".18" />
+            </g>
+            <text class="brand-logo-text" x="56" y="33">EDGION</text>
+            </svg>
+          </button>
+        </div>
+        <nav class="workflow-nav" aria-label="Workflow views"></nav>
+        <nav class="sidebar-secondary" aria-label="Secondary navigation">
+          <button class="nav-button secondary" type="button">
+            <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5" /><path d="M4 19h16" /><path d="m7 15 4-4 3 3 5-7" /></svg>
+            <span>Insights</span>
+          </button>
+          <button class="nav-button secondary" type="button">
+            <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z" /><path d="M14 3v5h4" /><path d="M9 13h6" /><path d="M9 17h4" /></svg>
+            <span>Reports</span>
+          </button>
+          <button class="nav-button secondary" type="button">
+            <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z" /><path d="M12 2v3" /><path d="M12 19v3" /><path d="m4.9 4.9 2.1 2.1" /><path d="m17 17 2.1 2.1" /><path d="M2 12h3" /><path d="M19 12h3" /><path d="m4.9 19.1 2.1-2.1" /><path d="m17 7 2.1-2.1" /></svg>
+            <span>Settings</span>
+          </button>
+        </nav>
+        <p class="sidebar-note">Synthetic demo. No validated site-level risk, underwriting, pricing, valuation, insurability, BI, MFL / PML, or engineering conclusion.</p>
+      </aside>
+      <main class="main">
+        <div id="workflow-host" class="workflow-host"></div>
+        <div id="workflow-bridge-host" class="workflow-bridge-host"></div>
+        <header class="topbar">
+          <div class="topbar-title">
+            <h1>Professional Review Workflow</h1>
+          </div>
+          <div class="topbar-actions">
+            <span class="status">MVP v0</span>
+            <button class="icon-action" type="button" aria-label="Notifications">⌁</button>
+          </div>
+        </header>
+        <div id="app"></div>
+      </main>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script type="module" src="./app.mjs?v=processed-hazard-map-21"></script>
+  </body>
+</html>

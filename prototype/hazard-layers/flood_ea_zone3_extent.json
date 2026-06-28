@@ -1,0 +1,37 @@
+{
+  "bbox": {
+    "east": 0.4,
+    "north": 52.0,
+    "south": 50.9,
+    "west": -1.6
+  },
+  "commercial_suitability": "Suitable with OGL attribution.",
+  "crs": "EPSG:4326",
+  "display_name": "Flood: EA Zone 3 extent",
+  "feature_count": 8552,
+  "files": {
+    "geojson": "public/hazard-layers/flood_ea_zone3_extent.geojson",
+    "png": "public/hazard-layers/flood_ea_zone3_extent.png",
+    "preview": "public/hazard-previews/flood_ea_zone3_extent_preview.png"
+  },
+  "hazard_type": "flood",
+  "id": "flood_ea_zone3_extent",
+  "legend_bins": {
+    "FZ2": "Flood Zone 2 if present",
+    "FZ3": "Flood Zone 3 river/sea extent"
+  },
+  "license_note": "Open Government Licence v3.0.",
+  "max": null,
+  "min": null,
+  "nodata": null,
+  "processing_script": "scripts/process_hazard_layers.py",
+  "rendering_settings": {
+    "opacity": 0.52,
+    "style": "transparent blue fill with subtle darker border",
+    "vector": "invalid geometries cleaned with buffer(0), clipped to bbox, lightly simplified"
+  },
+  "resolution": "Official vector flood-zone polygons; cropped to demo bbox",
+  "source": "Environment Agency Flood Map for Planning - Flood Zones 2 and 3",
+  "source_attribution": "Environment Agency copyright/database right; OGL v3.0",
+  "source_url": "https://environment.data.gov.uk/geoservices/datasets/04532375-a198-476e-985e-0579a0a11b47/ogc/features/v1/collections/Flood_Zones_2_3_Rivers_and_Sea/items?f=application%2Fgeo%2Bjson&bbox=-1.6%2C50.9%2C0.4%2C52.0&limit=10000"
+}

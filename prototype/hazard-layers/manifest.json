@@ -1,0 +1,307 @@
+{
+  "default_view": {
+    "center": [
+      51.48,
+      -0.35
+    ],
+    "zoom": 9
+  },
+  "demo_bbox": {
+    "east": 0.4,
+    "north": 52,
+    "south": 50.9,
+    "west": -1.6
+  },
+  "layers": [
+    {
+      "bbox": {
+        "east": 0.4,
+        "north": 52,
+        "south": 50.9,
+        "west": -1.6
+      },
+      "commercial_suitability": "Suitable for public screening demonstration with attribution; not a production site-level hazard assessment.",
+      "crs": "EPSG:4326",
+      "default_visible": true,
+      "display_name": "Flood: UK river RP100 depth",
+      "files": {
+        "geotiff": "public/hazard-layers/flood_jrc_rp100_depth.tif",
+        "png": "public/hazard-layers/flood_jrc_rp100_depth.png",
+        "preview": "public/hazard-previews/flood_jrc_rp100_depth_raw_vs_enhanced.png",
+        "raw_png": "public/hazard-layers/flood_jrc_rp100_depth_raw.png"
+      },
+      "hazard_type": "flood",
+      "id": "flood_jrc_rp100_depth",
+      "layer_id": "flood_jrc_rp100_depth",
+      "legend_bins": {
+        "1": "<1 m",
+        "2": "1-<3 m",
+        "3": "3-<10 m",
+        "4": ">10 m"
+      },
+      "license_note": "Free/open Copernicus product; attribution/citation required.",
+      "max": 3,
+      "min": 1,
+      "nodata": 0,
+      "processing_script": "scripts/process_hazard_layers.py",
+      "rendering_settings": {
+        "enhanced": "bicubic resize, premultiplied Gaussian blur 0.7 px, subtle blue edge contour",
+        "opacity": 0.78,
+        "raw": "class-coloured reclass raster"
+      },
+      "resolution": "3 arc-second source (~90 m); demo raster cropped to bbox",
+      "source": "JRC/CEMS Global River Flood Hazard Maps, RP100 reclass tiles",
+      "source_attribution": "JRC/CEMS Global River Flood Hazard Maps; Copernicus Emergency Management Service",
+      "source_url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP100/",
+      "status": "ready"
+    },
+    {
+      "bbox": {
+        "east": 0.4,
+        "north": 52,
+        "south": 50.9,
+        "west": -1.6
+      },
+      "commercial_suitability": "Suitable with OGL attribution.",
+      "crs": "EPSG:4326",
+      "default_visible": true,
+      "display_name": "Flood: EA Zone 3 extent",
+      "feature_count": 8552,
+      "files": {
+        "geojson": "public/hazard-layers/flood_ea_zone3_extent.geojson",
+        "png": "public/hazard-layers/flood_ea_zone3_extent.png",
+        "preview": "public/hazard-previews/flood_ea_zone3_extent_preview.png"
+      },
+      "hazard_type": "flood",
+      "id": "flood_ea_zone3_extent",
+      "layer_id": "flood_ea_zone3_extent",
+      "legend_bins": {
+        "FZ2": "Flood Zone 2 if present",
+        "FZ3": "Flood Zone 3 river/sea extent"
+      },
+      "license_note": "Open Government Licence v3.0.",
+      "max": null,
+      "min": null,
+      "nodata": null,
+      "processing_script": "scripts/process_hazard_layers.py",
+      "rendering_settings": {
+        "opacity": 0.52,
+        "style": "transparent blue fill with subtle darker border",
+        "vector": "invalid geometries cleaned with buffer(0), clipped to bbox, lightly simplified"
+      },
+      "resolution": "Official vector flood-zone polygons; cropped to demo bbox",
+      "source": "Environment Agency Flood Map for Planning - Flood Zones 2 and 3",
+      "source_attribution": "Environment Agency copyright/database right; OGL v3.0",
+      "source_url": "https://environment.data.gov.uk/geoservices/datasets/04532375-a198-476e-985e-0579a0a11b47/ogc/features/v1/collections/Flood_Zones_2_3_Rivers_and_Sea/items?f=application%2Fgeo%2Bjson&bbox=-1.6%2C50.9%2C0.4%2C52.0&limit=10000",
+      "status": "ready"
+    },
+    {
+      "bbox": {
+        "east": 0.4,
+        "north": 52,
+        "south": 50.9,
+        "west": -1.6
+      },
+      "commercial_suitability": "Synthetic screening proxy for UI walkthrough only; not a public climatological probability product.",
+      "crs": "EPSG:4326 synthetic raster image overlay",
+      "default_visible": true,
+      "display_name": "Heat: GLA heat risk",
+      "files": {
+        "png": "public/hazard-layers/heat_gla_london_risk.png",
+        "preview": "public/hazard-previews/heat_gla_london_risk_raw_vs_enhanced.png",
+        "raw_png": "public/hazard-layers/heat_gla_london_risk_raw.png",
+        "visual_png": "hazard-layers/visual/heat_gla_london_risk_visual.png"
+      },
+      "hazard_type": "heat",
+      "id": "heat_gla_london_risk",
+      "layer_id": "heat_gla_london_risk",
+      "legend_bins": {
+        "20-<40": "low",
+        "40-<60": "moderate",
+        "60+": "high within current range",
+        "<20": "very low"
+      },
+      "license_note": "Synthetic screening artifact generated for this hackathon package; not sourced from third-party licensed geodata.",
+      "max": 52,
+      "min": 15,
+      "nodata": null,
+      "processing_script": "Generated synthetic screening raster for public hackathon package",
+      "rendering_settings": {
+        "opacity": 0.7,
+        "style": "transparent synthetic screening raster overlay"
+      },
+      "resolution": "Synthetic raster generated for screening map overlay",
+      "source": "Synthetic screening proxy",
+      "source_attribution": "Synthetic screening proxy generated for Edgion Atlas AgentHack UI",
+      "source_url": "",
+      "status": "ready",
+      "data_kind": "synthetic_screening_proxy"
+    },
+    {
+      "bbox": {
+        "east": 0.4,
+        "north": 52,
+        "south": 50.9,
+        "west": -1.6
+      },
+      "commercial_suitability": "Demo suitable with attribution; cache policy must be checked before external production use.",
+      "crs": "EPSG:4326 image overlay",
+      "default_visible": true,
+      "display_name": "Wildfire danger: EFFIS FWI",
+      "files": {
+        "png": "public/hazard-layers/wildfire_effis_fwi.png",
+        "preview": "public/hazard-previews/wildfire_effis_fwi_raw_vs_enhanced.png",
+        "raw_png": "public/hazard-layers/wildfire_effis_fwi_raw.png",
+        "visual_png": "hazard-layers/visual/wildfire_effis_fwi_visual.png"
+      },
+      "hazard_type": "wildfire",
+      "id": "wildfire_effis_fwi",
+      "layer_id": "wildfire_effis_fwi",
+      "legend_bins": {
+        "provider_style": "EFFIS FWI classes; keep provider legend semantics"
+      },
+      "license_note": "European Commission reuse notice; attribution required. Verify caching policy for production.",
+      "max": null,
+      "min": null,
+      "nodata": "transparent alpha",
+      "nontransparent_pixels": 2662000,
+      "processing_script": "scripts/process_hazard_layers.py",
+      "rendering_settings": {
+        "enhanced": "continuous cartographic rendering from dated WMS PNG; 42 px Gaussian smoothing, softened colour/contrast, subtle edge contour",
+        "opacity": 0.52,
+        "raw": "dated WMS PNG"
+      },
+      "resolution": "WMS-rendered operational model grid, requested at 2200 px over demo bbox",
+      "source": "EFFIS Fire Weather Index WMS layer mf010.fwi",
+      "source_attribution": "EFFIS / Copernicus Emergency Management Service / European Commission",
+      "source_url": "https://maps.effis.emergency.copernicus.eu/effis?service=WMS&request=GetMap&layers=mf010.fwi&styles=&format=image%2Fpng&transparent=true&version=1.1.1&width=2200&height=1210&srs=EPSG%3A4326&bbox=-1.6%2C50.9%2C0.4%2C52.0&time=2026-06-27",
+      "status": "ready"
+    },
+    {
+      "bbox": {
+        "east": 0.4,
+        "north": 52,
+        "south": 50.9,
+        "west": -1.6
+      },
+      "commercial_suitability": "Synthetic screening proxy for UI walkthrough only; not a public climatological probability product.",
+      "crs": "EPSG:4326 synthetic raster image overlay",
+      "data_kind": "synthetic_screening_proxy",
+      "default_visible": true,
+      "display_name": "Wind: storm footprint proxy",
+      "files": {
+        "png": "public/hazard-layers/wind_pgw_etc_proxy.png",
+        "preview": "public/hazard-previews/wind_pgw_etc_proxy_raw_vs_enhanced.png",
+        "raw_png": "public/hazard-layers/wind_pgw_etc_proxy_raw.png",
+        "visual_png": "hazard-layers/visual/wind_pgw_etc_proxy_visual.png"
+      },
+      "hazard_type": "wind",
+      "id": "wind_pgw_etc_proxy",
+      "layer_id": "wind_pgw_etc_proxy",
+      "legend_bins": {
+        "0.0": "none",
+        "0.25": "25% selected cases",
+        "0.5": "50% selected cases",
+        "1.0": "100% selected cases"
+      },
+      "license_note": "Synthetic screening artifact generated for this hackathon package; not sourced from internal model output.",
+      "max": 0.75,
+      "min": 0.2500019967556,
+      "nodata": "NaN / transparent alpha",
+      "processing_script": "Generated synthetic screening raster for public hackathon package",
+      "rendering_settings": {
+        "opacity": 0.68,
+        "style": "transparent synthetic screening raster overlay"
+      },
+      "resolution": "Synthetic raster generated for screening map overlay",
+      "source": "Synthetic screening proxy",
+      "source_attribution": "Synthetic screening proxy generated for Edgion Atlas AgentHack UI",
+      "source_url": "",
+      "status": "ready"
+    },
+    {
+      "bbox": {
+        "east": 0.4,
+        "north": 52,
+        "south": 50.9,
+        "west": -1.6
+      },
+      "commercial_suitability": "Synthetic screening proxy for UI walkthrough only; not a public climatological probability product.",
+      "crs": "EPSG:4326 synthetic raster image overlay",
+      "data_kind": "synthetic_screening_proxy",
+      "default_visible": true,
+      "display_name": "Rain: rainfall footprint proxy",
+      "files": {
+        "png": "public/hazard-layers/rain_pgw_etc_proxy.png",
+        "preview": "public/hazard-previews/rain_pgw_etc_proxy_raw_vs_enhanced.png",
+        "raw_png": "public/hazard-layers/rain_pgw_etc_proxy_raw.png",
+        "visual_png": "hazard-layers/visual/rain_pgw_etc_proxy_visual.png"
+      },
+      "hazard_type": "rainfall",
+      "id": "rain_pgw_etc_proxy",
+      "layer_id": "rain_pgw_etc_proxy",
+      "legend_bins": {
+        "0.0": "none",
+        "0.25": "25% selected cases",
+        "0.5": "50% selected cases",
+        "1.0": "100% selected cases"
+      },
+      "license_note": "Synthetic screening artifact generated for this hackathon package; not sourced from internal model output.",
+      "max": 0.37499698996543884,
+      "min": 0,
+      "nodata": "NaN / transparent alpha",
+      "processing_script": "Generated synthetic screening raster for public hackathon package",
+      "rendering_settings": {
+        "opacity": 0.64,
+        "style": "transparent synthetic screening raster overlay"
+      },
+      "resolution": "Synthetic raster generated for screening map overlay",
+      "source": "Synthetic screening proxy",
+      "source_attribution": "Synthetic screening proxy generated for Edgion Atlas AgentHack UI",
+      "source_url": "",
+      "status": "ready"
+    },
+    {
+      "bbox": {
+        "east": 0.4,
+        "north": 52,
+        "south": 50.9,
+        "west": -1.6
+      },
+      "commercial_suitability": "Suitable with WRI attribution.",
+      "crs": "EPSG:4326",
+      "default_visible": false,
+      "display_name": "Water stress: WRI Aqueduct",
+      "feature_count": 15,
+      "files": {
+        "geojson": "public/hazard-layers/water_stress_wri_aqueduct.geojson",
+        "png": "public/hazard-layers/water_stress_wri_aqueduct.png",
+        "preview": "public/hazard-previews/water_stress_wri_aqueduct_raw_vs_enhanced.png",
+        "visual_png": "hazard-layers/visual/water_stress_wri_aqueduct_visual.png"
+      },
+      "hazard_type": "water_stress",
+      "id": "water_stress_wri_aqueduct",
+      "layer_id": "water_stress_wri_aqueduct",
+      "legend_bins": {
+        "bws_cat": "WRI baseline water-stress categories",
+        "bws_score": "0-5 score"
+      },
+      "license_note": "CC BY 4.0 attribution required.",
+      "max": 3.385130336353954,
+      "min": -9999,
+      "nodata": null,
+      "processing_script": "scripts/process_hazard_layers.py",
+      "rendering_settings": {
+        "opacity": 0.58,
+        "style": "soft teal transparent basin fill and white seams",
+        "vector": "clean/clip basin polygons"
+      },
+      "resolution": "HydroSHEDS basin polygons; clipped to demo bbox",
+      "source": "WRI Aqueduct 4.0 Water Risk Atlas - Baseline Annual",
+      "source_attribution": "Aqueduct 4.0, World Resources Institute. CC BY 4.0",
+      "source_url": "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/aqueduct_water_risk/FeatureServer/1/query?where=1%3D1&outFields=name_0%2Cname_1%2Cbws_raw%2Cbws_score%2Cbws_cat%2Cbws_label&geometry=-1.6%2C50.9%2C0.4%2C52.0&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&f=geojson",
+      "status": "ready"
+    }
+  ],
+  "version": "2026-06-27-phase2-phase3"
+}

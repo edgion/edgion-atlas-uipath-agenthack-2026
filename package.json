@@ -1,0 +1,10 @@
+{
+  "name": "edgion-uipath-agenthack-2026",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Agent-prepared physical-risk work-up prototype for UiPath AgentHack 2026.",
+  "scripts": {
+    "start": "node prototype/workflow_bridge_server.mjs",
+    "test": "node prototype/test_core.mjs && node prototype/test_workflow_backend.mjs && node prototype/test_bridge_server.mjs && node prototype/test_frontend_bridge_contract.mjs"
+  }
+}

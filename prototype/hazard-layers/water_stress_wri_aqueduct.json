@@ -1,0 +1,37 @@
+{
+  "bbox": {
+    "east": 0.4,
+    "north": 52.0,
+    "south": 50.9,
+    "west": -1.6
+  },
+  "commercial_suitability": "Suitable with WRI attribution.",
+  "crs": "EPSG:4326",
+  "display_name": "Water stress: WRI Aqueduct",
+  "feature_count": 15,
+  "files": {
+    "geojson": "public/hazard-layers/water_stress_wri_aqueduct.geojson",
+    "png": "public/hazard-layers/water_stress_wri_aqueduct.png",
+    "preview": "public/hazard-previews/water_stress_wri_aqueduct_raw_vs_enhanced.png"
+  },
+  "hazard_type": "water_stress",
+  "id": "water_stress_wri_aqueduct",
+  "legend_bins": {
+    "bws_cat": "WRI baseline water-stress categories",
+    "bws_score": "0-5 score"
+  },
+  "license_note": "CC BY 4.0 attribution required.",
+  "max": 3.385130336353954,
+  "min": -9999.0,
+  "nodata": null,
+  "processing_script": "scripts/process_hazard_layers.py",
+  "rendering_settings": {
+    "opacity": 0.58,
+    "style": "soft teal transparent basin fill and white seams",
+    "vector": "clean/clip basin polygons"
+  },
+  "resolution": "HydroSHEDS basin polygons; clipped to demo bbox",
+  "source": "WRI Aqueduct 4.0 Water Risk Atlas - Baseline Annual",
+  "source_attribution": "Aqueduct 4.0, World Resources Institute. CC BY 4.0",
+  "source_url": "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/aqueduct_water_risk/FeatureServer/1/query?where=1%3D1&outFields=name_0%2Cname_1%2Cbws_raw%2Cbws_score%2Cbws_cat%2Cbws_label&geometry=-1.6%2C50.9%2C0.4%2C52.0&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&f=geojson"
+}

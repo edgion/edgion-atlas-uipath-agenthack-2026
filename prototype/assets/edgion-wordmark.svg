@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" width="400" height="80" fill="none">
+  <defs>
+    <radialGradient id="ion3d" cx="0.36" cy="0.32" r="0.50" fx="0.33" fy="0.27">
+      <stop offset="0%" stop-color="#5EFCE4"/>
+      <stop offset="25%" stop-color="#2EECC1"/>
+      <stop offset="65%" stop-color="#00C8A0"/>
+      <stop offset="100%" stop-color="#009E7A"/>
+    </radialGradient>
+    <radialGradient id="ionHL" cx="0.33" cy="0.28" r="0.22">
+      <stop offset="0%" stop-color="#fff" stop-opacity="0.92"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="ionGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+      <feFlood flood-color="#00C8A0" flood-opacity="0.18" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="shadow"/>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <g transform="scale(0.8)">
+    <path d="M 68,26 A 32,32 0 1 0 68,74" fill="none" stroke="#1A1F36" stroke-width="6" stroke-linecap="round"/>
+    <path d="M 64,31 A 26,26 0 1 0 64,69" fill="none" stroke="#1A1F36" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+    <g filter="url(#ionGlow)">
+      <circle cx="76" cy="50" r="8.5" fill="url(#ion3d)"/>
+      <circle cx="73.5" cy="47" r="3.8" fill="url(#ionHL)"/>
+    </g>
+    <circle cx="64" cy="31" r="2" fill="#1A1F36" opacity="0.2"/>
+  </g>
+  <g fill="#1A1F36" transform="translate(96 68) scale(0.037584 -0.037584)">
+    <path transform="translate(0,0)" d="M111 0V1490H1180V1226H419V881H1123V624H419V264H1180V0Z"/>
+    <path transform="translate(1285,0)" d="M637 0H111V1490H643Q867 1490 1031.0 1399.0Q1195 1308 1284.0 1141.0Q1373 974 1373 746Q1373 517 1284.0 349.5Q1195 182 1030.5 91.0Q866 0 637 0ZM419 259H621Q847 259 955.0 385.0Q1063 511 1063 746Q1063 981 954.5 1106.0Q846 1231 624 1231H419Z"/>
+    <path transform="translate(2761,0)" d="M772 -24Q561 -24 401.0 72.0Q241 168 152.0 341.0Q63 514 63 744Q63 982 155.0 1154.5Q247 1327 406.5 1420.5Q566 1514 767 1514Q938 1514 1079.5 1448.0Q1221 1382 1312.0 1264.5Q1403 1147 1422 991H1110Q1085 1105 997.5 1173.5Q910 1242 776 1242Q588 1242 480.5 1108.0Q373 974 373 744Q373 515 481.5 381.5Q590 248 780 248Q934 248 1031.5 333.5Q1129 419 1131 558H806V792H1432V602Q1432 417 1347.5 276.0Q1263 135 1114.0 55.5Q965 -24 772 -24Z"/>
+    <path transform="translate(4308,0)" d="M419 1490V0H111V1490Z"/>
+    <path transform="translate(4878,0)" d="M765 -24Q565 -24 406.0 69.5Q247 163 155.0 335.5Q63 508 63 744Q63 982 155.0 1154.5Q247 1327 406.0 1420.5Q565 1514 765 1514Q966 1514 1124.5 1420.5Q1283 1327 1375.5 1154.5Q1468 982 1468 744Q1468 507 1375.5 335.0Q1283 163 1124.5 69.5Q966 -24 765 -24ZM765 248Q938 248 1048.0 377.5Q1158 507 1158 744Q1158 982 1048.0 1112.0Q938 1242 765 1242Q593 1242 483.0 1112.0Q373 982 373 744Q373 507 483.0 377.5Q593 248 765 248Z"/>
+    <path transform="translate(6449,0)" d="M111 0V1490H435L914 728Q940 686 984.0 609.0Q1028 532 1072 452Q1069 539 1068.0 622.5Q1067 706 1067 753V1490H1374V0H1049L615 690Q582 741 528.5 832.5Q475 924 412 1038Q416 921 417.5 830.0Q419 739 419 691V0Z"/>
+  </g>
+</svg>
