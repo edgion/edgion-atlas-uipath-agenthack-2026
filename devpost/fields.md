@@ -31,7 +31,7 @@ Structured Process Orchestration with UiPath Maestro BPMN
 
 ```text
 GitHub repo URL: https://github.com/edgion/edgion-atlas-uipath-agenthack-2026
-Demo video URL: <pending final upload URL>
+Demo video URL: https://youtu.be/W1ce-mQoi84
 Deck URL: https://github.com/edgion/edgion-atlas-uipath-agenthack-2026/blob/main/deck/edgion_atlas_deck.pdf
 ```
 
