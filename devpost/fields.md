@@ -1,7 +1,7 @@
 # Devpost Field Pack
 
-Date: 2026-06-28
-Status: ready to paste after final links are available.
+Date: 2026-06-29
+Status: ready to paste.
 
 ## Project Name
 
